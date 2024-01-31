@@ -1,0 +1,425 @@
+---
+title: "Progress Memo 1-- Diabetes Hospitalization: Risk for Readmission"
+subtitle: |
+  | Final Project 
+  | Data Science 2 with R (STAT 301-2)
+author: "Allison Kane"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+reference-location: margin
+citation-location: margin
+---
+
+::: {.callout-tip icon=false}
+
+## Github Repo Link
+
+[Allison Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-akane2460)
+
+:::
+
+## Data source
+
+This dataset includes data of diabetes patients admitted to the hospital for a maximum of 2 weeks at 130 different clinical care hospitals or healthcare settings from 1999 to 2008.^[Clore, John, Cios, Krzysztof, DeShazo, Jon, and Strack, Beata. (2014). Diabetes 130-US hospitals for years 1999-2008. UCI Machine Learning Repository.[ https://doi.org/10.24432/C5230J.](https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008)]
+
+## Why this data
+
+Diabetes is a chronic health condition impacting the body's metabolism and regulation of blood glucose. Over time, diabetes can impact various systems in the body including blood vessels, kidneys, eyes, heart and nerves. Often occurring in patients with uncontrolled blood glucose levels, diabetic neuropathy damages these systems and can often lead to necrosis of limbs or organ system failures over time. Maintenance of blood sugar levels and diabetes medication routines is critical for neuropathy and other side effect prevention. Structural barriers to access, including lack of insurance in the United States, failure to prescribe certain medications, inconsistent physician management of the condition, etc., place some patients at greater risk. This dataset examines thousands of patients with diabetes admitted to the hospital and examines their risk of readmission within 30 days. 
+
+## Data quality & complexity check
+
+<table>
+ <thead>
+  <tr>
+   <th style="text-align:right;"> encounter_id </th>
+   <th style="text-align:right;"> patient_nbr </th>
+   <th style="text-align:left;"> race </th>
+   <th style="text-align:left;"> gender </th>
+   <th style="text-align:left;"> age </th>
+   <th style="text-align:left;"> weight </th>
+   <th style="text-align:right;"> admission_type_id </th>
+   <th style="text-align:right;"> discharge_disposition_id </th>
+   <th style="text-align:right;"> admission_source_id </th>
+   <th style="text-align:right;"> time_in_hospital </th>
+   <th style="text-align:left;"> payer_code </th>
+   <th style="text-align:left;"> medical_specialty </th>
+   <th style="text-align:right;"> num_lab_procedures </th>
+   <th style="text-align:right;"> num_procedures </th>
+   <th style="text-align:right;"> num_medications </th>
+   <th style="text-align:right;"> number_outpatient </th>
+   <th style="text-align:right;"> number_emergency </th>
+   <th style="text-align:right;"> number_inpatient </th>
+   <th style="text-align:left;"> diag_1 </th>
+   <th style="text-align:left;"> diag_2 </th>
+   <th style="text-align:left;"> diag_3 </th>
+   <th style="text-align:right;"> number_diagnoses </th>
+   <th style="text-align:left;"> max_glu_serum </th>
+   <th style="text-align:left;"> A1Cresult </th>
+   <th style="text-align:left;"> metformin </th>
+   <th style="text-align:left;"> repaglinide </th>
+   <th style="text-align:left;"> nateglinide </th>
+   <th style="text-align:left;"> chlorpropamide </th>
+   <th style="text-align:left;"> glimepiride </th>
+   <th style="text-align:left;"> acetohexamide </th>
+   <th style="text-align:left;"> glipizide </th>
+   <th style="text-align:left;"> glyburide </th>
+   <th style="text-align:left;"> tolbutamide </th>
+   <th style="text-align:left;"> pioglitazone </th>
+   <th style="text-align:left;"> rosiglitazone </th>
+   <th style="text-align:left;"> acarbose </th>
+   <th style="text-align:left;"> miglitol </th>
+   <th style="text-align:left;"> troglitazone </th>
+   <th style="text-align:left;"> tolazamide </th>
+   <th style="text-align:left;"> examide </th>
+   <th style="text-align:left;"> citoglipton </th>
+   <th style="text-align:left;"> insulin </th>
+   <th style="text-align:left;"> glyburide-metformin </th>
+   <th style="text-align:left;"> glipizide-metformin </th>
+   <th style="text-align:left;"> glimepiride-pioglitazone </th>
+   <th style="text-align:left;"> metformin-rosiglitazone </th>
+   <th style="text-align:left;"> metformin-pioglitazone </th>
+   <th style="text-align:left;"> change </th>
+   <th style="text-align:left;"> diabetesMed </th>
+   <th style="text-align:left;"> readmitted </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:right;"> 2278392 </td>
+   <td style="text-align:right;"> 8222157 </td>
+   <td style="text-align:left;"> Caucasian </td>
+   <td style="text-align:left;"> Female </td>
+   <td style="text-align:left;"> [0-10) </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 25 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:left;"> Pediatrics-Endocrinology </td>
+   <td style="text-align:right;"> 41 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:left;"> 250.83 </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> NO </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 149190 </td>
+   <td style="text-align:right;"> 55629189 </td>
+   <td style="text-align:left;"> Caucasian </td>
+   <td style="text-align:left;"> Female </td>
+   <td style="text-align:left;"> [10-20) </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 59 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 18 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:left;"> 276 </td>
+   <td style="text-align:left;"> 250.01 </td>
+   <td style="text-align:left;"> 255 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Up </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Ch </td>
+   <td style="text-align:left;"> Yes </td>
+   <td style="text-align:left;"> &gt;30 </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 64410 </td>
+   <td style="text-align:right;"> 86047875 </td>
+   <td style="text-align:left;"> AfricanAmerican </td>
+   <td style="text-align:left;"> Female </td>
+   <td style="text-align:left;"> [20-30) </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 11 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 13 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> 648 </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> V27 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Steady </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Yes </td>
+   <td style="text-align:left;"> NO </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 500364 </td>
+   <td style="text-align:right;"> 82442376 </td>
+   <td style="text-align:left;"> Caucasian </td>
+   <td style="text-align:left;"> Male </td>
+   <td style="text-align:left;"> [30-40) </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 44 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 16 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:left;"> 8 </td>
+   <td style="text-align:left;"> 250.43 </td>
+   <td style="text-align:left;"> 403 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Up </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Ch </td>
+   <td style="text-align:left;"> Yes </td>
+   <td style="text-align:left;"> NO </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 16680 </td>
+   <td style="text-align:right;"> 42519267 </td>
+   <td style="text-align:left;"> Caucasian </td>
+   <td style="text-align:left;"> Male </td>
+   <td style="text-align:left;"> [40-50) </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 51 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:left;"> 197 </td>
+   <td style="text-align:left;"> 157 </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Steady </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Steady </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Ch </td>
+   <td style="text-align:left;"> Yes </td>
+   <td style="text-align:left;"> NO </td>
+  </tr>
+  <tr>
+   <td style="text-align:right;"> 35754 </td>
+   <td style="text-align:right;"> 82637451 </td>
+   <td style="text-align:left;"> Caucasian </td>
+   <td style="text-align:left;"> Male </td>
+   <td style="text-align:left;"> [50-60) </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:left;"> ? </td>
+   <td style="text-align:right;"> 31 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 16 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:left;"> 414 </td>
+   <td style="text-align:left;"> 411 </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:right;"> 9 </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> None </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Steady </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> No </td>
+   <td style="text-align:left;"> Yes </td>
+   <td style="text-align:left;"> &gt;30 </td>
+  </tr>
+</tbody>
+</table>
+
+In the diabetes dataset, there are 50 variables, 13 of which are numeric and 37 of which are characters. There are 101,766 observations, each corresponding to a patient admitted to one of 130 hospitals from 1999 to 2008. This dataset has some missingness issues. 
+
+## Potential data issues
+
+The dataset, however, does not list missing values as NA but rather as a *?*. These missing values (*?*) are found to be more substantial in the weight, race, payer_code and medical_specialty variables. Minimal missigness issues are found in the diag_1, diag_2, and diag_3 variables. The rest seem to have complete rates close to 100%. For payer_code, this might be an indication that a patient does not have insurance.^[The values obtained in this section were found in the output from `skim_without_charts(diabetic_data)` and additional analyses seen in script `0_data_collection_cleaning.R`]. 
+
+Additionally, some variables are listed as numeric variables, including encounter_id, patient_nbr, admission_type_id, discharge_disposition_id, and admission_source_id. These are not suited to be numerical variables and should be converted to a different variable type. Upon their conversion, this would leave truly numeric variables for analysis, although they seem to be quite important to understanding a patient's medical history and hospital stay (for example, time_in_hospital or num_lab_procedures seems quite important to understand if a patient is a risk for readmission to the hospital). 
+
+These issues must be handled early on into the data analyis process. 
+
+## Misc
+
+Also included in the data folder is an abridged codebook published by the dataset creators that includes what each id code means. 
+
