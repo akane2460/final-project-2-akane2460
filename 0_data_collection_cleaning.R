@@ -18,7 +18,7 @@ shortened_diabetic_data <- diabetic_data |>
 
 shortened_diabetic_data <- kable(shortened_diabetic_data, format = "html")
 
-file_path_shortened_diabetic_data <- "results/shortened_diabetic_data.html"
+file_path_shortened_diabetic_data <- "memos/results/shortened_diabetic_data.html"
 
 writeLines(as.character(shortened_diabetic_data), con = file_path_shortened_diabetic_data)
 
@@ -55,3 +55,31 @@ diabetic_data |> skimr::skim_without_charts()
   
   # no missigness otherwise
   
+# target variable analysis
+
+diabetic_data |> skimr::skim_without_charts(readmitted)
+  
+readmitted_plot <- diabetic_data |> 
+  ggplot(aes(x = readmitted)) +
+  geom_bar() +
+  theme_minimal() +
+  labs(
+    title = "Diabetic Patients: Readmission to Hospital Frequency"
+  )
+
+ggsave(here("memos/results/readmitted_plot.png"), readmitted_plot)
+
+readmitted_table <- diabetic_data |> 
+  summarize(
+    not_readmitted = sum(readmitted == "NO"),
+    readmitted = sum(readmitted != "NO"),
+    pct_not_readmitted = not_readmitted / (not_readmitted + readmitted) * 100,
+    pct_readmitted = readmitted / (not_readmitted + readmitted) * 100,
+  ) |> 
+  select(pct_readmitted, pct_not_readmitted)
+
+readmitted_table <- kable(readmitted_table, format = "html")
+
+file_path_readmitted_table <- "memos/results/readmitted_table.html"
+
+writeLines(as.character(readmitted_table), con = file_path_readmitted_table)

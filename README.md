@@ -17,4 +17,4 @@ This repo includes analysis on the dataset `diabetic_data.csv`, with data obtain
     
 ### HTML Documents
 - Within the memos folder:
-    - `Kane_Allison_final_report.html` contains the final report and extensive EDA on the dataset.
+    - `Kane_Allison_progress_memo_1.html` contains the first data memo and project progress on the dataset.
