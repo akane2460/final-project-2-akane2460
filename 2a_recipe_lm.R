@@ -1,0 +1,53 @@
+# Final project Recipes ----
+# Stat 301-1
+
+# NULL model recipe
+
+### Load Packages ----
+
+library(tidyverse)
+library(tidymodels)
+library(skimr)
+library(janitor)
+library(here)
+library(knitr)
+
+tidymodels_prefer()
+
+# load data
+load(here("data/diabetic_train.rda"))
+
+# recipe a: basic/null model----
+
+# description of what is in the recipe
+    # for initial recipe, the general category change will be examined as a placeholder
+      # for the more specific medication variables like metformin or insulin (etc)
+      # the change variable encompasses if there is any change in ANY diabetes medication
+      # whereas these specific medication variables measure if that medication
+      # changed in its prescription. 
+      # in the future, accounting for the different effects of different drugs
+      # might be worthwhile. but for now we are examining overall changes in diabetes medication
+    
+    # basic demographics (age, race, gender) and their lab results (max_glu_serum and a1cresult)
+    # are important assessments of their risk for certain complications of diabetes
+    
+    # the number of procedures, doctor visits, days in the hospital, etc. are all indicators
+    # of how severe their side effects or complications of diabetes could be
+
+# recipe
+null_diabetic_recipe <- recipe(
+  readmitted ~ age + race + gender + max_glu_serum + a1cresult
+  + change + num_lab_procedures + num_procedures + num_medications + number_diagnoses +
+    number_emergency + time_in_hospital + number_outpatient + number_inpatient,
+  data = diabetic_train) |> 
+  step_dummy(all_nominal_predictors(), one_hot = TRUE, skip = TRUE)
+
+# testing recipe
+null_diabetic_recipe |>
+  prep() |>
+  bake(new_data = NULL) |>
+  glimpse()
+
+# save recipe
+save(null_diabetic_recipe, file = here("recipes/null_diabetic_recipe.rda"))
+
