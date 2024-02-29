@@ -1,7 +1,6 @@
 # Final project  ----
 # Stat 301-1
-# Define and fit logistic regression
-
+# Define and fit lasso 
 # note: not fitted to folds yet
 
 # load packages ----
@@ -24,7 +23,7 @@ registerDoMC(cores = num_cores)
 load(here("data/diabetic_train.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("recipes/null_diabetic_recipe.rda"))
+load(here("recipes/lasso_recipe.rda"))
 
 # model specifications ----
 lasso_spec <- 
@@ -36,7 +35,7 @@ lasso_spec <-
 lasso_wflow <-
   workflow() |> 
   add_model(lasso_spec) |> 
-  add_recipe(null_diabetic_recipe)
+  add_recipe(lasso_recipe)
 
 # fit workflows/models ----
 fit_lasso <- fit(lasso_wflow, diabetic_train)
@@ -44,6 +43,5 @@ fit_lasso <- fit(lasso_wflow, diabetic_train)
 # write out results (fitted/trained workflows) ----
 save(fit_lasso, file = here("results/fit_lasso.rda"))
 
-fit_lasso |> 
-head(4)
+
 
