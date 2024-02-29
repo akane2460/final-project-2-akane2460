@@ -6,6 +6,7 @@ This repo includes analysis on the dataset `diabetic_data.csv`, with data obtain
 ### Folders
 - `data\` can find the original dataset `diabetic_data.csv` and the id codebook `IDS_mapping.csv`.
 - `memos\` can find the data memos for the project
+- `recipes\` can find the recipes for the project
 - `results\` can find outputs to be included in memos or reports in the project
 
 ### R Scripts
