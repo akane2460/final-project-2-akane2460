@@ -17,7 +17,7 @@ tidymodels_prefer()
 # load data
 load(here("data/diabetic_train.rda"))
 
-# recipe a: basic/null model----
+# recipe a: simple recipe----
 
 # description of what is in the recipe
     # for initial recipe, the general category change will be examined as a placeholder
@@ -51,3 +51,5 @@ null_diabetic_recipe |>
 # save recipe
 save(null_diabetic_recipe, file = here("recipes/null_diabetic_recipe.rda"))
 
+
+# recipe b: tree based

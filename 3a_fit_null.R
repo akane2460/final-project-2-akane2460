@@ -1,5 +1,6 @@
-# L05 Resampling ----
-# Define and fit ridge
+# Final project  ----
+# Stat 301-1
+# define and fit null model
 
 # load packages ----
 library(tidyverse)
@@ -13,7 +14,7 @@ tidymodels_prefer()
 load(here("data/diabetic_fold.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("recipes/diabetic_recipe_lm.rda"))
+load(here("recipes/null_diabetic_recipe.rda"))
 
 # specification
 diabetic_null_spec <- null_model() %>% 
@@ -34,3 +35,6 @@ diabetic_null_fit <- diabetic_null_workflow |>
 
 # save fit
 save(diabetic_null_fit, file = here("results/diabetic_null_fit.rda"))
+
+
+
