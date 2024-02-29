@@ -6,6 +6,8 @@
 library(tidyverse)
 library(tidymodels)
 library(here)
+library(doMC)
+library(parallel)
 
 # handle common conflicts
 tidymodels_prefer()

@@ -10,6 +10,7 @@ library(tidymodels)
 library(here)
 library(foreach)
 library(doMC)
+library(parallel)
 
 # handle common conflicts
 tidymodels_prefer()
@@ -20,7 +21,6 @@ num_cores <- parallel::detectCores(logical = TRUE)
 registerDoMC(cores = num_cores)
 
 # load training data
-load(here("data/diabetic_fold.rda"))
 load(here("data/diabetic_train.rda"))
 
 # load pre-processing/feature engineering/recipe
@@ -29,7 +29,7 @@ load(here("recipes/diabetic_recipe_lm.rda"))
 # model specifications ----
 log_reg_spec <- 
   logistic_reg() |> 
-  set_engine("glm") |> 
+  set_engine("glm", maxit = 100000) |> 
   set_mode("classification") 
 
 # define workflows ----
@@ -41,18 +41,13 @@ log_reg_wflow <-
 # fit workflows/models ----
 fit_log_reg <- fit(log_reg_wflow, diabetic_train)
 
-fit_log_reg_folded <- log_reg_wflow |> 
-  fit_resamples(resamples = diabetic_fold,
-                control = control_resamples(save_workflow = TRUE))
+# fit_log_reg_folded <- log_reg_wflow |> 
+#   fit_resamples(resamples = diabetic_fold,
+#                 control = control_resamples(save_workflow = TRUE))
 
 # write out results (fitted/trained workflows) ----
 save(fit_log_reg, file = here("results/fit_log_reg.rda"))
-save(fit_log_reg_folded, file = here("results/fit_log_reg_folded.rda"))
+# save(fit_log_reg_folded, file = here("results/fit_log_reg_folded.rda"))
 
-
-# load(here("results/fit_log_reg.rda"))
-# load(here("results/fit_log_reg_folded.rda"))
-
-# fit_log_reg_folded |> 
 
 
