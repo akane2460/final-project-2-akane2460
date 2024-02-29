@@ -52,8 +52,6 @@ roc_auc_curve_log_reg_table <- roc_auc_curve_log_reg |>
 
 roc_auc_curve_log_reg_table
 
-# nearest neighbors
-predict(diabetic_fit_nn, diabetic_test)
 
 
 

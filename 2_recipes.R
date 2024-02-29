@@ -57,6 +57,12 @@ tree_based_diabetic_recipe <- recipe(
   + change + num_lab_procedures + num_procedures + num_medications + number_diagnoses +
     number_emergency + time_in_hospital + number_outpatient + number_inpatient,
   data = diabetic_train) |> 
-  step_dummy(all_nominal())
+  step_interact(~ time_in_hospital : c(num_lab_procedures, number_diagnoses, num_procedures)) |> 
+  # with more time in the hospital, typically doing more tests/procedures and 
+  # providing more diagnoses
+  step_interact(~ number_emergency : c(number_outpatient, number_inpatient))
+# if you have a medical emergency, typically you will receive either outpatient or inpatient
+# medical care
+  
 
 save(tree_based_diabetic_recipe, file = here("recipes/tree_based_diabetic_recipe.rda"))
