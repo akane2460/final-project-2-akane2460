@@ -34,8 +34,8 @@ diabetic_test <- diabetic_split |> testing()
 set.seed(1245780)
 
 # making fold data
-diabetic_vfold <- 
-  diabetic_train |> vfold_cv(v = 10, repeats = 5) 
+diabetic_fold <- 
+  diabetic_train |> vfold_cv(v = 5, repeats = 3) 
 
 # diabetic_kfold <- 
 #   diabetic_train |> 
@@ -45,4 +45,4 @@ diabetic_vfold <-
 save(diabetic_split, file = here("data/diabetic_split.rda"))
 save(diabetic_train, file = here("data/diabetic_train.rda"))
 save(diabetic_test, file = here("data/diabetic_test.rda"))
-save(diabetic_vfold, file = here("data/diabetic_fold.rda"))
+save(diabetic_fold, file = here("data/diabetic_fold.rda"))

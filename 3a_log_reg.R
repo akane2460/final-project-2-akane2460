@@ -24,7 +24,7 @@ registerDoMC(cores = num_cores)
 load(here("data/diabetic_train.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("recipes/diabetic_recipe_lm.rda"))
+load(here("recipes/null_diabetic_recipe.rda"))
 
 # model specifications ----
 log_reg_spec <- 
@@ -36,18 +36,14 @@ log_reg_spec <-
 log_reg_wflow <-
   workflow() |> 
   add_model(log_reg_spec) |> 
-  add_recipe(diabetic_recipe_lm)
+  add_recipe(null_diabetic_recipe)
 
 # fit workflows/models ----
 fit_log_reg <- fit(log_reg_wflow, diabetic_train)
 
-# fit_log_reg_folded <- log_reg_wflow |> 
-#   fit_resamples(resamples = diabetic_fold,
-#                 control = control_resamples(save_workflow = TRUE))
-
 # write out results (fitted/trained workflows) ----
 save(fit_log_reg, file = here("results/fit_log_reg.rda"))
-# save(fit_log_reg_folded, file = here("results/fit_log_reg_folded.rda"))
+
 
 
 

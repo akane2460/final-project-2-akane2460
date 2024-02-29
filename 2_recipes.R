@@ -16,6 +16,7 @@ tidymodels_prefer()
 
 # load data
 load(here("data/diabetic_train.rda"))
+load(here("data/diabetic_test.rda"))
 
 # recipe a: simple recipe----
 
@@ -42,11 +43,12 @@ null_diabetic_recipe <- recipe(
   data = diabetic_train) |> 
   step_dummy(all_nominal_predictors(), one_hot = TRUE, skip = TRUE)
       # additional interactions might be considered in future
+
 # testing recipe
-# null_diabetic_recipe |>
-#   prep() |>
-#   bake(new_data = NULL) |>
-#   glimpse()
+null_diabetic_recipe |>
+  prep() |>
+  bake(new_data = NULL) |>
+  glimpse()
 
 # save recipe
 save(null_diabetic_recipe, file = here("recipes/null_diabetic_recipe.rda"))
