@@ -65,12 +65,14 @@ Given that our ROC_AUC value is .348 (approximately), this indicates that the mo
 
 ::: {.callout-box icon=false}
 
-## Random Forest
+## Lasso
 
 Accuracy and AUC-ROC
 
-To be determined.
-
+|.metric  |.estimator | .estimate|
+|:--------|:----------|---------:|
+|accuracy |binary     | 0.5356719|
+|roc_auc  |binary     |       0.5|
 
 :::
 

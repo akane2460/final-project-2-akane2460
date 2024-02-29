@@ -3046,7 +3046,7 @@ vertical-align: -.125em;
   <li><a href="#preliminary-fits" id="toc-preliminary-fits" class="nav-link" data-scroll-target="#preliminary-fits">Preliminary Fits</a>
   <ul class="collapse">
   <li><a href="#logistical-regression" id="toc-logistical-regression" class="nav-link" data-scroll-target="#logistical-regression">Logistical Regression</a></li>
-  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest">Random Forest</a></li>
+  <li><a href="#lasso" id="toc-lasso" class="nav-link" data-scroll-target="#lasso">Lasso</a></li>
   </ul></li>
   <li><a href="#overall-progress-potential-issues-and-next-steps" id="toc-overall-progress-potential-issues-and-next-steps" class="nav-link" data-scroll-target="#overall-progress-potential-issues-and-next-steps">Overall Progress, Potential Issues and Next Steps</a></li>
   </ul>
@@ -3151,10 +3151,30 @@ Prediction goal
 <p>Given that our accuracy measure for this model is .613 (approximately), this indicates that about 61.3% of the model’s predictions are correct in determining which patients will return to the hospital after they are discharged.</p>
 <p>Given that our ROC_AUC value is .348 (approximately), this indicates that the model is performing worse than random chance. This indicates further adjustments to obtain a more powerful predictive model.</p>
 </section>
-<section id="random-forest" class="level2 callout-box" data-icon="false">
-<h2 class="anchored" data-anchor-id="random-forest">Random Forest</h2>
+<section id="lasso" class="level2 callout-box" data-icon="false">
+<h2 class="anchored" data-anchor-id="lasso">Lasso</h2>
 <p>Accuracy and AUC-ROC</p>
-<p>To be determined.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.5356719</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 <section id="overall-progress-potential-issues-and-next-steps" class="level1">
