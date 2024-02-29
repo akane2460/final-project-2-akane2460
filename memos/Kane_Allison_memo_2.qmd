@@ -46,8 +46,6 @@ To investigate this classification problem and accurately predict which patients
 # Preliminary Fits
 Below are the assessments of the following models: logistical regression (with a null recipe), random forest (with a tree-based recipe).
 
-
-
 ::: {.callout-box icon=false}
 
 ## Logistical Regression
@@ -57,8 +55,21 @@ Accuracy and AUC-ROC
 |.metric  |.estimator | .estimate|
 |:--------|:----------|---------:|
 |accuracy |binary     | 0.6132061|
-|roc_auc |binary      | 0.3479326|
+|roc_auc  |binary     | 0.3479326|
+
+Given that our accuracy measure for this model is .613 (approximately), this indicates that about 61.3% of the model's predictions are correct in determining which patients will return to the hospital after they are discharged.
+
+Given that our ROC_AUC value is .348 (approximately), this indicates that the model is performing worse than random chance. This indicates further adjustments to obtain a more powerful predictive model.
 
 :::
 
+::: {.callout-box icon=false}
 
+## Random Forest
+
+Accuracy and AUC-ROC
+
+To be determined.
+
+
+:::
