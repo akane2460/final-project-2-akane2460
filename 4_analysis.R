@@ -23,8 +23,6 @@ registerDoMC(cores = num_cores)
 # load testing data
 load(here("data/diabetic_test.rda"))
 
-load(here("recipes/baked_test_data.rda"))
-
 # load fits
 load(here("results/fit_log_reg.rda"))
 load(here("results/fit_lasso.rda"))
