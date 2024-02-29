@@ -3043,6 +3043,10 @@ vertical-align: -.125em;
   <ul>
   <li><a href="#data-source" id="toc-data-source" class="nav-link active" data-scroll-target="#data-source">Data source</a></li>
   <li><a href="#data-plan" id="toc-data-plan" class="nav-link" data-scroll-target="#data-plan">Data Plan</a></li>
+  <li><a href="#preliminary-fits" id="toc-preliminary-fits" class="nav-link" data-scroll-target="#preliminary-fits">Preliminary Fits</a>
+  <ul class="collapse">
+  <li><a href="#logistical-regression" id="toc-logistical-regression" class="nav-link" data-scroll-target="#logistical-regression">Logistical Regression</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -3114,6 +3118,35 @@ Prediction goal
 <section id="data-plan" class="level2">
 <h2 class="anchored" data-anchor-id="data-plan">Data Plan</h2>
 <p>To investigate this classification problem and accurately predict which patients return to the hospital, I will examine the data as follows. I will first process and clean the data, identifying variables that are redundant or do not make sense and ensuring they are not included in the models. I will account for missingness issues as well. Then, I will process and split the data into training and testing sets. I will also create a resamples dataset using vfold for model cross-validation. Then, I will use a logistical regression style recipe and a tree-based recipe to form models. The models will include these six: logistical regression (null/baseline), lasso (applied to logistical approach), ridge (applied to logistical approach), knn nearest neighbor, random forest and gradient boosted tree. I will then assess their performance ideally using accuracy and roc_auc_curve metrics.</p>
+</section>
+<section id="preliminary-fits" class="level1">
+<h1>Preliminary Fits</h1>
+<p>Below are the assessments of the following models: logistical regression (with a null recipe), random forest (with a tree-based recipe).</p>
+<section id="logistical-regression" class="level2 callout-box" data-icon="false">
+<h2 class="anchored" data-anchor-id="logistical-regression">Logistical Regression</h2>
+<p>Accuracy and AUC-ROC</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.6132061</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.3479326</td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 
 

@@ -43,4 +43,22 @@ This dataset includes data of diabetes patients admitted to the hospital for a m
 
 To investigate this classification problem and accurately predict which patients return to the hospital, I will examine the data as follows. I will first process and clean the data, identifying variables that are redundant or do not make sense and ensuring they are not included in the models. I will account for missingness issues as well. Then, I will process and split the data into training and testing sets. I will also create a resamples dataset using vfold for model cross-validation. Then, I will use a logistical regression style recipe and a tree-based recipe to form models. The models will include these six: logistical regression (null/baseline), lasso (applied to logistical approach), ridge (applied to logistical approach), knn nearest neighbor, random forest and gradient boosted tree. I will then assess their performance ideally using accuracy and roc_auc_curve metrics. 
 
+# Preliminary Fits
+Below are the assessments of the following models: logistical regression (with a null recipe), random forest (with a tree-based recipe).
+
+
+
+::: {.callout-box icon=false}
+
+## Logistical Regression
+
+Accuracy and AUC-ROC
+
+|.metric  |.estimator | .estimate|
+|:--------|:----------|---------:|
+|accuracy |binary     | 0.6132061|
+|roc_auc |binary      | 0.3479326|
+
+:::
+
 

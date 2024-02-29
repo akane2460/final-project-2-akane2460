@@ -34,13 +34,23 @@ predicted_log_reg <- bind_cols(diabetic_test, predict(fit_log_reg, diabetic_test
 
 # accuracy
 accuracy_log_reg <- accuracy(predicted_log_reg, truth = readmitted, estimate = .pred_class)
+accuracy_log_reg_table <- accuracy_log_reg |> 
+  knitr::kable()
 
 # probabilities
 readmit_probabilities <- bind_cols(diabetic_test, predict(fit_log_reg, diabetic_test, type = "prob")) |> 
   select(readmitted, .pred_YES, .pred_NO)
 
+readmit_probabilities_table <- readmit_probabilities |> 
+  knitr::kable()
+
 # roc auc
 roc_auc_curve_log_reg <- roc_auc(readmit_probabilities, truth = readmitted, .pred_YES)
+
+roc_auc_curve_log_reg_table <- roc_auc_curve_log_reg |> 
+  knitr::kable()
+
+roc_auc_curve_log_reg_table
 
 # nearest neighbors
 predict(diabetic_fit_nn, diabetic_test)
