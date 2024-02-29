@@ -45,15 +45,29 @@ null_diabetic_recipe <- recipe(
       # additional interactions might be considered in future
 
 # testing recipe
-null_diabetic_recipe |>
-  prep() |>
-  bake(new_data = NULL) |>
-  glimpse()
+# null_diabetic_recipe |>
+#   prep() |>
+#   bake(new_data = NULL) |>
+#   glimpse()
 
 # save recipe
 save(null_diabetic_recipe, file = here("recipes/null_diabetic_recipe.rda"))
 
-# recipe b: tree based----
+# recipe b: lasso----
+lasso_recipe <- recipe(
+  readmitted ~ age + race + gender + max_glu_serum + a1cresult
+  + change + num_lab_procedures + num_procedures + num_medications + number_diagnoses +
+    number_emergency + time_in_hospital + number_outpatient + number_inpatient,
+  data = diabetic_train) |> 
+  step_nzv(all_predictors()) |>  
+  step_center(all_numeric_predictors()) |>  
+  step_scale(all_numeric_predictors()) |> 
+  step_dummy(all_nominal_predictors(), one_hot = FALSE) 
+
+# save recipe
+save(lasso_recipe, file = here("recipes/lasso_recipe.rda"))
+
+# recipe c: tree based----
 tree_based_diabetic_recipe <- recipe(
   readmitted ~ age + race + gender + max_glu_serum + a1cresult
   + change + num_lab_procedures + num_procedures + num_medications + number_diagnoses +
