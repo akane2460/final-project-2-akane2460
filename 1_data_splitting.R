@@ -35,8 +35,7 @@ set.seed(1245780)
 
 # making fold data
 diabetic_vfold <- 
-  diabetic_train |> 
-    vfold_cv(v = 7, repeats = 5) 
+  diabetic_train |> vfold_cv(v = 10, repeats = 5) 
 
 # diabetic_kfold <- 
 #   diabetic_train |> 
