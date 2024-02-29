@@ -1,5 +1,5 @@
 ---
-title: "Progress Memo 1-- Diabetes Hospitalization: Risk for Readmission"
+title: "Progress Memo 2-- Diabetes Hospitalization: Risk for Readmission"
 subtitle: |
   | Final Project 
   | Data Science 2 with R (STAT 301-2)
@@ -73,3 +73,8 @@ To be determined.
 
 
 :::
+
+# Overall Progress and Potential Issues
+
+  Overall, this progress indicates that there is much to be done. The logistical regression was fitted relatively easily, however the random forest model took considerable time and caused substantial issues in the github and the operating system of my computer, even with parallel processing. Currently, I am exploring options to obtain a separate computer that has a more powerful processing capability, as the one I am currently using is about 5 years old. 
+  

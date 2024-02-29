@@ -1,0 +1,41 @@
+---
+title: "Final Report-- Diabetes Hospitalization: Risk for Readmission"
+subtitle: |
+  | Final Project 
+  | Data Science 2 with R (STAT 301-2)
+author: "Allison Kane"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+reference-location: margin
+citation-location: margin
+---
+
+::: {.callout-tip icon=false}
+
+## Github Repo Link
+
+[Allison Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-akane2460)
+
+:::
+
+::: {.callout-note icon="false"}
+## Prediction goal
+
+The goal is to classify which diabetic patients would be readmitted to the hospital after their initial discharge. 
+
+:::
+
+## Data source
+
+This dataset includes data of diabetes patients admitted to the hospital for a maximum of 2 weeks at 130 different clinical care hospitals or healthcare settings from 1999 to 2008.^[Clore, John, Cios, Krzysztof, DeShazo, Jon, and Strack, Beata. (2014). Diabetes 130-US hospitals for years 1999-2008. UCI Machine Learning Repository.[ https://doi.org/10.24432/C5230J.](https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008)]
+

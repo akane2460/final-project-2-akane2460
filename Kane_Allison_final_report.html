@@ -9,7 +9,7 @@
 <meta name="author" content="Allison Kane">
 <meta name="dcterms.date" content="2024-02-29">
 
-<title>Progress Memo 2– Diabetes Hospitalization: Risk for Readmission</title>
+<title>Final Report– Diabetes Hospitalization: Risk for Readmission</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -3042,13 +3042,6 @@ vertical-align: -.125em;
    
   <ul>
   <li><a href="#data-source" id="toc-data-source" class="nav-link active" data-scroll-target="#data-source">Data source</a></li>
-  <li><a href="#data-plan" id="toc-data-plan" class="nav-link" data-scroll-target="#data-plan">Data Plan</a></li>
-  <li><a href="#preliminary-fits" id="toc-preliminary-fits" class="nav-link" data-scroll-target="#preliminary-fits">Preliminary Fits</a>
-  <ul class="collapse">
-  <li><a href="#logistical-regression" id="toc-logistical-regression" class="nav-link" data-scroll-target="#logistical-regression">Logistical Regression</a></li>
-  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest">Random Forest</a></li>
-  </ul></li>
-  <li><a href="#overall-progress-and-potential-issues" id="toc-overall-progress-and-potential-issues" class="nav-link" data-scroll-target="#overall-progress-and-potential-issues">Overall Progress and Potential Issues</a></li>
   </ul>
 </nav>
 </div>
@@ -3056,7 +3049,7 @@ vertical-align: -.125em;
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Progress Memo 2– Diabetes Hospitalization: Risk for Readmission</h1>
+<h1 class="title">Final Report– Diabetes Hospitalization: Risk for Readmission</h1>
 <p class="subtitle lead"></p><div class="line-block">Final Project<br>
 Data Science 2 with R (STAT 301-2)</div><p></p>
 </div>
@@ -3117,50 +3110,6 @@ Prediction goal
 <h2 class="anchored" data-anchor-id="data-source">Data source</h2>
 <p>This dataset includes data of diabetes patients admitted to the hospital for a maximum of 2 weeks at 130 different clinical care hospitals or healthcare settings from 1999 to 2008.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup> Clore, John, Cios, Krzysztof, DeShazo, Jon, and Strack, Beata. (2014). Diabetes 130-US hospitals for years 1999-2008. UCI Machine Learning Repository.<a href="https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008">https://doi.org/10.24432/C5230J.</a></p></li></div></section>
-<section id="data-plan" class="level2">
-<h2 class="anchored" data-anchor-id="data-plan">Data Plan</h2>
-<p>To investigate this classification problem and accurately predict which patients return to the hospital, I will examine the data as follows. I will first process and clean the data, identifying variables that are redundant or do not make sense and ensuring they are not included in the models. I will account for missingness issues as well. Then, I will process and split the data into training and testing sets. I will also create a resamples dataset using vfold for model cross-validation. Then, I will use a logistical regression style recipe and a tree-based recipe to form models. The models will include these six: logistical regression (null/baseline), lasso (applied to logistical approach), ridge (applied to logistical approach), knn nearest neighbor, random forest and gradient boosted tree. I will then assess their performance ideally using accuracy and roc_auc_curve metrics.</p>
-</section>
-<section id="preliminary-fits" class="level1">
-<h1>Preliminary Fits</h1>
-<p>Below are the assessments of the following models: logistical regression (with a null recipe), random forest (with a tree-based recipe).</p>
-<section id="logistical-regression" class="level2 callout-box" data-icon="false">
-<h2 class="anchored" data-anchor-id="logistical-regression">Logistical Regression</h2>
-<p>Accuracy and AUC-ROC</p>
-<table class="table">
-<thead>
-<tr class="header">
-<th style="text-align: left;">.metric</th>
-<th style="text-align: left;">.estimator</th>
-<th style="text-align: right;">.estimate</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">accuracy</td>
-<td style="text-align: left;">binary</td>
-<td style="text-align: right;">0.6132061</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">roc_auc</td>
-<td style="text-align: left;">binary</td>
-<td style="text-align: right;">0.3479326</td>
-</tr>
-</tbody>
-</table>
-<p>Given that our accuracy measure for this model is .613 (approximately), this indicates that about 61.3% of the model’s predictions are correct in determining which patients will return to the hospital after they are discharged.</p>
-<p>Given that our ROC_AUC value is .348 (approximately), this indicates that the model is performing worse than random chance. This indicates further adjustments to obtain a more powerful predictive model.</p>
-</section>
-<section id="random-forest" class="level2 callout-box" data-icon="false">
-<h2 class="anchored" data-anchor-id="random-forest">Random Forest</h2>
-<p>Accuracy and AUC-ROC</p>
-<p>To be determined.</p>
-</section>
-</section>
-<section id="overall-progress-and-potential-issues" class="level1">
-<h1>Overall Progress and Potential Issues</h1>
-<p>Overall, this progress indicates that there is much to be done. The logistical regression was fitted relatively easily, however the random forest model took considerable time and caused substantial issues in the github and the operating system of my computer, even with parallel processing. Currently, I am exploring options to obtain a separate computer that has a more powerful processing capability, as the one I am currently using is about 5 years old.</p>
-</section>
 
 
 </main>
