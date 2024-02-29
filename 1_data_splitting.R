@@ -29,6 +29,9 @@ diabetic_split <- diabetic_clean |>
 diabetic_train <- diabetic_split |> training()
 diabetic_test <- diabetic_split |> testing()
 
+diabetic_train |> 
+  head()
+
 # folding data (resamples)----
 # set seed
 set.seed(1245780)
@@ -37,9 +40,8 @@ set.seed(1245780)
 diabetic_fold <- 
   diabetic_train |> vfold_cv(v = 5, repeats = 3) 
 
-# diabetic_kfold <- 
-#   diabetic_train |> 
-#   vfold_cv(v = 10, repeats = 5) 
+diabetic_fold |> 
+  head()
 
 # write out split, train, fold and test data
 save(diabetic_split, file = here("data/diabetic_split.rda"))
