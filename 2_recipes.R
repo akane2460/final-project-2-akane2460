@@ -1,7 +1,7 @@
 # Final project Recipes ----
 # Stat 301-1
 
-# NULL model recipe
+# model recipes
 
 ### Load Packages ----
 
