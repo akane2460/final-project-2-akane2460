@@ -20,38 +20,47 @@ registerDoMC(cores = num_cores)
 
 # load training data
 load(here("data/diabetic_train.rda"))
-
-summary(diabetic_train)
+load(here("data/diabetic_fold.rda"))
 
 # load pre-processing/feature engineering/recipe
 load(here("recipes/tree_based_diabetic_recipe.rda"))
 
+# model specifications ----
 # set seed
-set.seed(9862349)
+set.seed(2109739)
 
-random_forest_spec <-
-  rand_forest() |>
-  set_engine("ranger") |>
+rf_spec <- 
+  rand_forest(trees = 1000, min_n = tune(), mtry = tune()) |> 
+  set_engine("ranger") |> 
   set_mode("classification")
 
-# define workflow
-diabetic_rf_wflow <-
-  workflow() |>
-  add_model(random_forest_spec) |>
+# define workflows ----
+rf_model <-
+  workflow() |> 
+  add_model(rf_spec) |> 
   add_recipe(tree_based_diabetic_recipe)
 
-# fit workflows/models
-diabetic_fit_rf <- fit(diabetic_rf_wflow, diabetic_train)
+# hyperparameter tuning values ----
 
-      # diabetes_rf_fit <- diabetic_rf_wflow |>
-      #   fit_resamples(
-      #     resamples = diabetic_fold,
-      #     control = control_resamples(save_workflow = TRUE)
-      #     )
+# change hyperparameter ranges
+rf_params <- hardhat::extract_parameter_set_dials(rf_model) %>% 
+  update(mtry = mtry(c(1, 14))) 
+
+# build tuning grid
+rf_grid <- grid_regular(rf_params, levels = 5)
+
+# fit workflows/models ----
+# set seed
+set.seed(0127307)
+rf_tuned <- 
+  rf_model |> 
+  tune_grid(
+    diabetic_fold, 
+    grid = rf_grid, 
+    control = control_grid(save_workflow = TRUE)
+  )
 
 # save fit
 save(diabetic_fit_rf, file = here("results/diabetic_fit_rf.rda"))
-
-
 
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Allison Kane">
-<meta name="dcterms.date" content="2024-02-25">
+<meta name="dcterms.date" content="2024-02-29">
 
 <title>Progress Memo 1– Diabetes Hospitalization: Risk for Readmission</title>
 <style>
@@ -3069,7 +3069,7 @@ Data Science 2 with R (STAT 301-2)</div><p></p>
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">February 25, 2024</p>
+      <p class="date">February 29, 2024</p>
     </div>
   </div>
   
@@ -3104,7 +3104,7 @@ Prediction goal
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The goal is to classify which diabetic patients would be readmitted to the hospital within 30 days of their initial discharge.</p>
+<p>The goal is to classify which diabetic patients would be readmitted to the hospital after their initial discharge.</p>
 </div>
 </div>
 <section id="data-source" class="level2 page-columns page-full">
@@ -3113,6 +3113,7 @@ Prediction goal
 <div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup> Clore, John, Cios, Krzysztof, DeShazo, Jon, and Strack, Beata. (2014). Diabetes 130-US hospitals for years 1999-2008. UCI Machine Learning Repository.<a href="https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008">https://doi.org/10.24432/C5230J.</a></p></li></div></section>
 <section id="data-plan" class="level2">
 <h2 class="anchored" data-anchor-id="data-plan">Data Plan</h2>
+<p>To investigate this classification problem and accurately predict which patients return to the hospital, I will examine the data as follows. I will first process and clean the data, identifying variables that are redundant or do not make sense and ensuring they are not included in the models. I will account for missingness issues as well. Then, I will process and split the data into training and testing sets. I will also create a resamples dataset using vfold for model cross-validation. Then, I will use a logistical regression style recipe and a tree-based recipe to form models. The models will include these six: logistical regression (null/baseline), lasso (applied to logistical approach), ridge (applied to logistical approach), knn nearest neighbor, random forest and gradient boosted tree. I will then assess their performance ideally using accuracy and roc_auc_curve metrics.</p>
 </section>
 
 
