@@ -22,6 +22,9 @@ registerDoMC(cores = num_cores)
 # load training data
 load(here("data/diabetic_train.rda"))
 
+# load resamples 
+load(here("data/diabetic_fold.rda"))
+
 # load pre-processing/feature engineering/recipe
 load(here("recipes/lasso_recipe.rda"))
 
@@ -38,7 +41,15 @@ lasso_wflow <-
   add_recipe(lasso_recipe)
 
 # fit workflows/models ----
-fit_lasso <- fit(lasso_wflow, diabetic_train)
+set.seed(29871334)
+
+fit_lasso <- lasso_wflow |> 
+  fit_resamples(
+    resamples = diabetic_fold, 
+    control = control_resamples(save_workflow = TRUE)
+  )
+
+# fit_lasso <- fit(lasso_wflow, diabetic_train)
 
 # write out results (fitted/trained workflows) ----
 save(fit_lasso, file = here("results/fit_lasso.rda"))
