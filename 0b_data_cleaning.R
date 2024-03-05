@@ -1,5 +1,8 @@
 # Final project Data Cleaning ----
 # Stat 301-1
+
+# random processes present
+
 ## Load Packages ----
 
 library(tidyverse)
@@ -123,5 +126,13 @@ skim_without_charts(diabetic_clean)
 # save out cleaned data----
 save(diabetic_clean, file = here("data/diabetic_clean.rda"))
 
-
 skim_without_charts(diabetic_clean)
+
+# sampling cleaned data----
+set.seed(2109480)
+sampled_diabetic <- diabetic_clean %>% 
+  group_by(readmitted) %>% 
+  sample_n(size = 16000 / n_distinct(readmitted))
+
+# save out cleaned sample data----
+save(sampled_diabetic, file = here("data/sampled_diabetic.rda"))
