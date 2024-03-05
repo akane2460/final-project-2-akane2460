@@ -41,6 +41,8 @@ log_reg_wflow <-
 
 # fit workflows/models ----
 # fit resamples
+set.seed(986214)
+
 fit_log_reg <- log_reg_wflow |> 
   fit_resamples(
   resamples = diabetic_fold, 
