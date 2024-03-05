@@ -15,14 +15,14 @@ library(knitr)
 tidymodels_prefer()
 
 # read in data----
-load(here("data/diabetic_clean.rda"))
+load(here("data/sampled_diabetic.rda"))
 
 # split----
 # set seed
 set.seed(239222)
 
 # splitting data
-diabetic_split <- diabetic_clean |> 
+diabetic_split <- sampled_diabetic |> 
   initial_split(prop = .8, strata = readmitted)
 
 # making train and test data

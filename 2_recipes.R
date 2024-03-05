@@ -41,7 +41,7 @@ null_diabetic_recipe <- recipe(
   + change + num_lab_procedures + num_procedures + num_medications + number_diagnoses +
     number_emergency + time_in_hospital + number_outpatient + number_inpatient,
   data = diabetic_train) |> 
-  step_dummy(all_nominal_predictors(), one_hot = TRUE, skip = TRUE)
+  step_dummy(all_nominal_predictors(), one_hot = TRUE)
       # additional interactions might be considered in future
 
 # testing recipe
