@@ -2,6 +2,7 @@
 # Stat 301-1
 # define and fit boosted 
 
+
 # random processes present
 
 # note: fit not yet complete
