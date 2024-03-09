@@ -37,9 +37,9 @@ load(here("results/null_fit_ridge.rda"))
 load(here("results/featured_fit_ridge.rda"))
 load(here("results/advanced_fit_ridge.rda"))
 # # boosted
-# load(here("results/null_fit_log_reg.rda"))
-# load(here("results/featured_fit_log_reg.rda"))
-# load(here("results/advanced_fit_log_reg.rda"))
+load(here("results/null_boosted_tuned.rda"))
+load(here("results/featured_boosted_tuned.rda"))
+load(here("results/advanced_boosted_tuned.rda"))
 # # en
 # load(here("results/null_fit_log_reg.rda"))
 # load(here("results/featured_fit_log_reg.rda"))
@@ -117,24 +117,24 @@ lasso_max_accuracy |>
   # performs best on all 3
 
 # boosted----
-# boosted_model_set <- as_workflow_set(
-#   boosted_null = null_fit_log_reg,
-#   boosted_featured = featured_fit_boosted,
-#   boosted_advanced = advanced_fit_boosted
-# )
-# 
-# boosted_accuracy_metrics <- boosted_model_set |>
-#   collect_metrics() |>
-#   filter(.metric == "accuracy")
-# 
-# boosted_max_accuracy <- boosted_accuracy_metrics |>
-#   group_by(wflow_id) |>
-#   slice_max(mean) |>
-#   distinct(wflow_id, .keep_all = TRUE)
-# 
-# boosted_max_accuracy |>
-#   select(wflow_id, .metric, mean, std_err) |>
-#   knitr::kable()
+boosted_model_set <- as_workflow_set(
+  boosted_null = null_boosted_tuned,
+  boosted_featured = featured_boosted_tuned,
+  boosted_advanced = advanced_boosted_tuned
+)
+
+boosted_accuracy_metrics <- boosted_model_set |>
+  collect_metrics() |>
+  filter(.metric == "accuracy")
+
+boosted_max_accuracy <- boosted_accuracy_metrics |>
+  group_by(wflow_id) |>
+  slice_max(mean) |>
+  distinct(wflow_id, .keep_all = TRUE)
+
+boosted_max_accuracy |>
+  select(wflow_id, .metric, mean, std_err) |>
+  knitr::kable()
 
 # performs best on null
 
