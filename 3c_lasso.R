@@ -26,7 +26,9 @@ load(here("data/diabetic_train.rda"))
 load(here("data/diabetic_fold.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("recipes/lasso_recipe.rda"))
+load(here("recipes/null_diabetic_recipe.rda"))
+load(here("recipes/featured_recipe.rda"))
+load(here("recipes/advanced_recipe.rda"))
 
 # model specifications ----
 lasso_spec <- 
@@ -35,24 +37,56 @@ lasso_spec <-
   set_mode("classification") 
 
 # define workflows ----
-lasso_wflow <-
+# null wflow
+null_lasso_wflow <-
   workflow() |> 
   add_model(lasso_spec) |> 
-  add_recipe(lasso_recipe)
+  add_recipe(null_diabetic_recipe)
+
+# featured wflow
+featured_lasso_wflow <-
+  workflow() |> 
+  add_model(lasso_spec) |> 
+  add_recipe(featured_recipe)
+
+# advanced wflow
+advanced_lasso_wflow <-
+  workflow() |> 
+  add_model(lasso_spec) |> 
+  add_recipe(advanced_recipe)
 
 # fit workflows/models ----
-set.seed(29871334)
+# fit resamples to null----
+set.seed(13749208)
 
-fit_lasso <- lasso_wflow |> 
+null_fit_lasso <- null_lasso_wflow |> 
   fit_resamples(
     resamples = diabetic_fold, 
+    control = control_resamples(save_workflow = TRUE)
+  )
+
+# fit resamples to featured----
+set.seed(02753891)
+
+featured_fit_lasso <- featured_lasso_wflow |>
+  fit_resamples(
+    resamples = diabetic_fold,
+    control = control_resamples(save_workflow = TRUE)
+  )
+
+# fit resamples to advanced----
+set.seed(014798311)
+
+advanced_fit_lasso <- advanced_lasso_wflow |>
+  fit_resamples(
+    resamples = diabetic_fold,
     control = control_resamples(save_workflow = TRUE)
   )
 
 # fit_lasso <- fit(lasso_wflow, diabetic_train)
 
 # write out results (fitted/trained workflows) ----
-save(fit_lasso, file = here("results/fit_lasso.rda"))
-
-
+save(null_fit_lasso, file = here("results/null_fit_lasso.rda"))
+save(featured_fit_lasso, file = here("results/featured_fit_lasso.rda"))
+save(advanced_fit_lasso, file = here("results/advanced_fit_lasso.rda"))
 
