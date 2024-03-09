@@ -56,4 +56,3 @@ fit_log_reg <- log_reg_wflow |>
 # write out results (fitted/trained workflows) ----
 save(fit_log_reg, file = here("results/fit_log_reg.rda"))
 
-
