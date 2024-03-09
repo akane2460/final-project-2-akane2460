@@ -54,5 +54,5 @@ fit_log_reg <- log_reg_wflow |>
 #   fit(log_reg_wflow, diabetic_train)
 
 # write out results (fitted/trained workflows) ----
-save(fit_log_reg, file = here("results/fit_log_reg.rda"))
+save(fit_log_reg, file = here("results/null_fit_log_reg.rda"))
 
