@@ -85,7 +85,7 @@ boosted_grid <- grid_regular(advanced_boosted_params, levels = 5)
 # set seed
 set.seed(0927074)
 null_boosted_tuned <- 
-  boosted_model |> 
+  null_boosted_wflow |> 
   tune_grid(
     diabetic_fold, 
     grid = null_boosted_grid, 
@@ -96,9 +96,9 @@ null_boosted_tuned <-
 # set seed
 set.seed(07841234)
 featured_boosted_tuned <- 
-  boosted_model |> 
+  featured_boosted_wflow |> 
   tune_grid(
-    carseats_fold, 
+    diabetic_fold, 
     grid = featured_boosted_grid, 
     control = control_grid(save_workflow = TRUE)
   )
@@ -106,9 +106,9 @@ featured_boosted_tuned <-
 # advanced
 set.seed(01894723)
 advanced_boosted_tuned <- 
-  boosted_model |> 
+  advanced_boosted_wflow|> 
   tune_grid(
-    carseats_fold, 
+    diabetic_fold, 
     grid = advanced_boosted_grid, 
     control = control_grid(save_workflow = TRUE)
   )
