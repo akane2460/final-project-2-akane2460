@@ -1,3 +1,4 @@
+
 # Final project  ----
 # Stat 301-1
 # define and fit boosted 
@@ -78,7 +79,7 @@ hardhat::extract_parameter_set_dials(advanced_boosted_wflow)
 advanced_boosted_params <- parameters(advanced_boosted_wflow) |>  
   update(mtry = mtry(c(1, 14)), learn_rate = learn_rate(c(.075, .15)))
 
-boosted_grid <- grid_regular(advanced_boosted_params, levels = 5)
+advanced_boosted_grid <- grid_regular(advanced_boosted_params, levels = 5)
 
 # tuning model----
 # null
@@ -117,3 +118,5 @@ advanced_boosted_tuned <-
 save(null_boosted_tuned, file = here("results/null_boosted_tuned.rda"))
 save(featured_boosted_tuned, file = here("results/featured_boosted_tuned.rda"))
 save(advanced_boosted_tuned, file = here("results/advanced_boosted_tuned.rda"))
+
+
