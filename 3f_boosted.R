@@ -3,10 +3,7 @@
 # Stat 301-1
 # define and fit boosted 
 
-
 # random processes present
-
-# note: fit not yet complete
 
 # load packages ----
 library(tidyverse)
@@ -61,25 +58,25 @@ advanced_boosted_wflow <-
 hardhat::extract_parameter_set_dials(null_boosted_wflow)
 
 null_boosted_params <- parameters(null_boosted_wflow) |>  
-  update(mtry = mtry(c(1, 14)), learn_rate = learn_rate(c(.075, .15)))
+  update(mtry = mtry(c(1, 13)), learn_rate = learn_rate(c(.01, .1)))
 
-null_boosted_grid <- grid_regular(null_boosted_params, levels = 5)
+null_boosted_grid <- grid_regular(null_boosted_params, levels = 8)
 
 # featured hyperparameters
 hardhat::extract_parameter_set_dials(featured_boosted_wflow)
 
 featured_boosted_params <- parameters(featured_boosted_wflow) |>  
-  update(mtry = mtry(c(1, 14)), learn_rate = learn_rate(c(.075, .15)))
+  update(mtry = mtry(c(1, 13)), learn_rate = learn_rate(c(.01, .1)))
 
-featured_boosted_grid <- grid_regular(featured_boosted_params, levels = 5)
+featured_boosted_grid <- grid_regular(featured_boosted_params, levels = 8)
 
 # advanced hyperparameters
 hardhat::extract_parameter_set_dials(advanced_boosted_wflow)
 
 advanced_boosted_params <- parameters(advanced_boosted_wflow) |>  
-  update(mtry = mtry(c(1, 14)), learn_rate = learn_rate(c(.075, .15)))
+  update(mtry = mtry(c(1, 20)), learn_rate = learn_rate(c(.075, .15)))
 
-advanced_boosted_grid <- grid_regular(advanced_boosted_params, levels = 5)
+advanced_boosted_grid <- grid_regular(advanced_boosted_params, levels = 10)
 
 # tuning model----
 # null

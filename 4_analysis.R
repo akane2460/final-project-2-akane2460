@@ -20,53 +20,160 @@ num_cores <- parallel::detectCores(logical = TRUE)
 
 registerDoMC(cores = num_cores)
 
-# load testing data
+# load testing data----
 load(here("data/diabetic_test.rda"))
 
-# load fits
-load(here("results/fit_log_reg.rda"))
-load(here("results/fit_lasso.rda"))
-                              
-# assessment of models----
-# log reg----
-predicted_log_reg <- bind_cols(diabetic_test, predict(fit_log_reg, diabetic_test)) |> 
-  select(.pred_class, readmitted)
+# load fits----
+# log reg
+load(here("results/null_fit_log_reg.rda"))
+load(here("results/featured_fit_log_reg.rda"))
+load(here("results/advanced_fit_log_reg.rda"))
+# lasso
+load(here("results/null_fit_lasso.rda"))
+load(here("results/featured_fit_lasso.rda"))
+load(here("results/advanced_fit_lasso.rda"))
+# ridge
+load(here("results/null_fit_ridge.rda"))
+load(here("results/featured_fit_ridge.rda"))
+load(here("results/advanced_fit_ridge.rda"))
+# # boosted
+# load(here("results/null_fit_log_reg.rda"))
+# load(here("results/featured_fit_log_reg.rda"))
+# load(here("results/advanced_fit_log_reg.rda"))
+# # en
+# load(here("results/null_fit_log_reg.rda"))
+# load(here("results/featured_fit_log_reg.rda"))
+# load(here("results/advanced_fit_log_reg.rda"))
+# # knn
+# load(here("results/null_fit_log_reg.rda"))
+# load(here("results/featured_fit_log_reg.rda"))
+# load(here("results/advanced_fit_log_reg.rda"))
 
-# accuracy
-accuracy_log_reg <- accuracy(predicted_log_reg, truth = readmitted, estimate = .pred_class)
-accuracy_log_reg_table <- accuracy_log_reg |> 
+# assessment of resamples----
+
+# log reg assessment----
+log_reg_model_set <- as_workflow_set(
+  log_reg_null = null_fit_log_reg,
+  log_reg_featured = featured_fit_log_reg,
+  log_reg_advanced = advanced_fit_log_reg
+)
+
+log_reg_accuracy_metrics <- log_reg_model_set |>
+  collect_metrics() |>
+  filter(.metric == "accuracy")
+
+log_reg_max_accuracy <- log_reg_accuracy_metrics |>
+  group_by(wflow_id) |>
+  slice_max(mean) |>
+  distinct(wflow_id, .keep_all = TRUE)
+
+log_reg_max_accuracy |>
+  select(wflow_id, .metric, mean, std_err) |>
   knitr::kable()
 
-# probabilities
-readmit_probabilities_log_reg <- bind_cols(diabetic_test, predict(fit_log_reg, diabetic_test, type = "prob")) |> 
-  select(readmitted, .pred_YES, .pred_NO)
-readmit_probabilities_log_reg |> 
+  # performs best on advanced 
+
+# ridge assesment----
+ridge_model_set <- as_workflow_set(
+  ridge_null = null_fit_log_reg,
+  ridge_featured = featured_fit_ridge,
+  ridge_advanced = advanced_fit_ridge)
+
+ridge_accuracy_metrics <- ridge_model_set |>
+  collect_metrics() |>
+  filter(.metric == "accuracy")
+
+ridge_max_accuracy <- ridge_accuracy_metrics |>
+  group_by(wflow_id) |>
+  slice_max(mean) |>
+  distinct(wflow_id, .keep_all = TRUE)
+
+ridge_max_accuracy |>
+  select(wflow_id, .metric, mean, std_err) |>
   knitr::kable()
 
-# roc auc
-roc_auc_curve_log_reg <- roc_auc(readmit_probabilities_log_reg, truth = readmitted, .pred_YES)
-roc_auc_curve_log_reg_table <- roc_auc_curve_log_reg |> 
+  # performs best on advanced
+
+# lasso assessment----
+lasso_model_set <- as_workflow_set(
+  lasso_null = null_fit_lasso,
+  lasso_featured = featured_fit_lasso,
+  lasso_advanced = advanced_fit_lasso
+)
+
+lasso_accuracy_metrics <- lasso_model_set |>
+  collect_metrics() |>
+  filter(.metric == "accuracy")
+
+lasso_max_accuracy <- lasso_accuracy_metrics |>
+  group_by(wflow_id) |>
+  slice_max(mean) |>
+  distinct(wflow_id, .keep_all = TRUE)
+
+lasso_max_accuracy |>
+  select(wflow_id, .metric, mean, std_err) |>
   knitr::kable()
 
-# lasso----
-# predictions
-predicted_lasso <- bind_cols(diabetic_test, predict(fit_lasso, diabetic_test)) |> 
-  select(.pred_class, readmitted)
+  # performs best on all 3
 
-# accuracy
-accuracy_lasso <- accuracy(predicted_lasso, truth = readmitted, estimate = .pred_class)
-accuracy_lasso |> 
+# boosted----
+# boosted_model_set <- as_workflow_set(
+#   boosted_null = null_fit_log_reg,
+#   boosted_featured = featured_fit_boosted,
+#   boosted_advanced = advanced_fit_boosted
+# )
+# 
+# boosted_accuracy_metrics <- boosted_model_set |>
+#   collect_metrics() |>
+#   filter(.metric == "accuracy")
+# 
+# boosted_max_accuracy <- boosted_accuracy_metrics |>
+#   group_by(wflow_id) |>
+#   slice_max(mean) |>
+#   distinct(wflow_id, .keep_all = TRUE)
+# 
+# boosted_max_accuracy |>
+#   select(wflow_id, .metric, mean, std_err) |>
+#   knitr::kable()
+
+# performs best on null
+
+# overall assessment----
+model_set <- as_workflow_set(
+  log_reg_null = null_fit_log_reg,
+  ridge_null = null_fit_log_reg,
+  lasso_null = null_fit_lasso,
+  # boosted_null = null_fit_log_reg,
+  # en_null = null_fit_log_reg,
+  # knn_null = null_fit_log_reg,
+  log_reg_featured = featured_fit_log_reg,
+  ridge_featured = featured_fit_ridge,
+  lasso_featured = featured_fit_lasso,
+  # boosted_null = null_fit_log_reg,
+  # en_null = null_fit_log_reg,
+  # knn_null = null_fit_log_reg,
+  log_reg_advanced = advanced_fit_log_reg,
+  ridge_advanced = advanced_fit_ridge,
+  lasso_advanced = advanced_fit_lasso
+  # boosted_null = null_fit_log_reg,
+  # en_null = null_fit_log_reg,
+  # knn_null = null_fit_log_reg,
+)
+
+accuracy_metrics <- model_set |>
+  collect_metrics() |>
+  filter(.metric == "accuracy")
+
+max_accuracy <- accuracy_metrics |>
+  group_by(wflow_id) |>
+  slice_max(mean) |>
+  distinct(wflow_id, .keep_all = TRUE)
+
+max_accuracy |>
+  select(wflow_id, .metric, mean, std_err) |>
   knitr::kable()
 
-# probabilities
-readmit_probabilities_lasso <- bind_cols(diabetic_test, predict(fit_lasso, diabetic_test, type = "prob")) |> 
-  select(readmitted, .pred_YES, .pred_NO)
-readmit_probabilities_lasso |> 
-  knitr::kable()
-
-# roc auc
-roc_auc_curve_lasso <- roc_auc(readmit_probabilities_lasso, truth = readmitted, .pred_YES)
-roc_auc_curve_lasso |> 
-  knitr::kable()
+# # look at best results parameters rf
+# best_results_rf <- select_best(rf_tuned, metric = "accuracy")
 
 

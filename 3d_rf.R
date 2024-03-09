@@ -23,14 +23,14 @@ load(here("data/diabetic_train.rda"))
 load(here("data/diabetic_fold.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("recipes/tree_based_diabetic_recipe.rda"))
+load(here("recipes/null_diabetic_recipe.rda"))
 
 # model specifications ----
 # set seed
 set.seed(2109739)
 
 rf_spec <- 
-  rand_forest(trees = 1000, min_n = tune(), mtry = tune()) |> 
+  rand_forest(trees = 500, min_n = tune(), mtry = tune()) |> 
   set_engine("ranger") |> 
   set_mode("classification")
 
@@ -38,7 +38,7 @@ rf_spec <-
 rf_model <-
   workflow() |> 
   add_model(rf_spec) |> 
-  add_recipe(tree_based_diabetic_recipe)
+  add_recipe(null_diabetic_recipe)
 
 # hyperparameter tuning values ----
 
