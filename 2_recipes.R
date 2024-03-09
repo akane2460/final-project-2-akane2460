@@ -75,10 +75,10 @@ featured_recipe <- recipe(
 
 
 # testing recipe
-featured_recipe |>
-  prep() |>
-  bake(new_data = NULL) |>
-  glimpse()
+# featured_recipe |>
+#   prep() |>
+#   bake(new_data = NULL) |>
+#   glimpse()
 
 # save recipe
 save(featured_recipe, file = here("recipes/featured_recipe.rda"))
@@ -107,10 +107,10 @@ advanced_recipe <- recipe(
   step_dummy(all_nominal_predictors(), one_hot = TRUE)
 
 # testing recipe
-advanced_recipe |>
-  prep() |>
-  bake(new_data = NULL) |>
-  glimpse()
+# advanced_recipe |>
+#   prep() |>
+#   bake(new_data = NULL) |>
+#   glimpse()
 
 # save recipe
 save(advanced_recipe, file = here("recipes/advanced_recipe.rda"))
