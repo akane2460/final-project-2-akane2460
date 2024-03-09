@@ -2,8 +2,6 @@
 # Stat 301-1
 # Define and fit logistic regression
 
-# note: not fitted to folds yet
-
 # load packages ----
 library(tidyverse)
 library(tidymodels)
@@ -82,13 +80,13 @@ advanced_fit_log_reg <- advanced_log_reg_wflow |>
     control = control_resamples(save_workflow = TRUE)
   )
 
-
 # fit to train data (if final model)
-# fit_log_reg <-
-#   fit(log_reg_wflow, diabetic_train)
+# null_fit_log_reg_final <- fit(null_log_reg_wflow, diabetic_train)
+
+# final_fit <- fit(final_wflow, carseats_train)
 
 # write out results (fitted/trained workflows) ----
 save(null_fit_log_reg, file = here("results/null_fit_log_reg.rda"))
 save(featured_fit_log_reg, file = here("results/featured_fit_log_reg.rda"))
 save(advanced_fit_log_reg, file = here("results/advanced_fit_log_reg.rda"))
-
+# save(null_fit_log_reg_final, file = here("results/null_fit_log_reg_final.rda"))
