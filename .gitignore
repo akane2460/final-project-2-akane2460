@@ -41,4 +41,6 @@
 # find . -size +100M | sed 's|^\./||g' | cat >> .gitignore; awk '!NF || !seen[$0]++' .gitignore
 
 # ignore fits
-results/boosted_tuned.rda
+results/advanced_boosted_tuned.rda
+results/featured_boosted_tuned.rda
+results/null_boosted_tuned.rda
