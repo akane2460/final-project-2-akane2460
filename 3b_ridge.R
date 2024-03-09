@@ -28,7 +28,9 @@ load(here("data/diabetic_train.rda"))
 load(here("data/diabetic_fold.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("recipes/lasso_recipe.rda"))
+load(here("recipes/null_diabetic_recipe.rda"))
+load(here("recipes/featured_recipe.rda"))
+load(here("recipes/advanced_recipe.rda"))
 
 # model specifications ----
 ridge_spec <- 
@@ -37,15 +39,47 @@ ridge_spec <-
   set_mode("classification") 
 
 # define workflows ----
-ridge_wflow <-
+# null wflow
+null_ridge_wflow <-
   workflow() |> 
   add_model(ridge_spec) |> 
-  add_recipe(lasso_recipe)
+  add_recipe(null_diabetic_recipe)
+
+# featured wflow
+featured_ridge_wflow <-
+  workflow() |> 
+  add_model(ridge_spec) |> 
+  add_recipe(featured_recipe)
+
+# advanced wflow
+advanced_ridge_wflow <-
+  workflow() |> 
+  add_model(ridge_spec) |> 
+  add_recipe(advanced_recipe)
 
 # fit workflows/models ----
+# null fit
 set.seed(02927328)
 
-fit_ridge <- ridge_wflow |> 
+null_fit_ridge <- null_ridge_wflow |> 
+  fit_resamples(
+    resamples = diabetic_fold, 
+    control = control_resamples(save_workflow = TRUE)
+  )
+
+# featured fit
+set.seed(02840147)
+
+featured_fit_ridge <- featured_ridge_wflow |> 
+  fit_resamples(
+    resamples = diabetic_fold, 
+    control = control_resamples(save_workflow = TRUE)
+  )
+
+# advanced fit
+set.seed(7843910)
+
+advanced_fit_ridge <- advanced_ridge_wflow |> 
   fit_resamples(
     resamples = diabetic_fold, 
     control = control_resamples(save_workflow = TRUE)
@@ -54,4 +88,7 @@ fit_ridge <- ridge_wflow |>
 # fit_lasso <- fit(lasso_wflow, diabetic_train)
 
 # write out results (fitted/trained workflows) ----
-save(fit_ridge, file = here("results/fit_ridge.rda"))
+save(null_fit_ridge, file = here("results/null_fit_ridge.rda"))
+save(featured_fit_ridge, file = here("results/featured_fit_ridge.rda"))
+save(advanced_fit_ridge, file = here("results/advanced_fit_ridge.rda"))
+
