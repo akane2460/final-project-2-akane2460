@@ -26,7 +26,9 @@ load(here("data/diabetic_train.rda"))
 load(here("data/diabetic_fold.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("recipes/tree_based_diabetic_recipe.rda"))
+load(here("recipes/null_diabetic_recipe.rda"))
+load(here("recipes/featured_recipe.rda"))
+load(here("recipes/advanced_recipe.rda"))
 
 # model specifications ----
 boosted_spec <- 
@@ -35,34 +37,83 @@ boosted_spec <-
   set_mode("classification")
 
 # define workflows ----
-boosted_model <-
+# null wflow
+null_boosted_wflow <-
   workflow() |> 
   add_model(boosted_spec) |> 
-  add_recipe(tree_based_diabetic_recipe)
+  add_recipe(null_diabetic_recipe)
+
+# featured wflow
+featured_boosted_wflow <-
+  workflow() |> 
+  add_model(boosted_spec) |> 
+  add_recipe(featured_recipe)
+
+# advanced wflow
+advanced_boosted_wflow <-
+  workflow() |> 
+  add_model(boosted_spec) |> 
+  add_recipe(advanced_recipe)
 
 # hyperparameter tuning values ----
-# check ranges for hyperparameters
-hardhat::extract_parameter_set_dials(boosted_model)
+# null hyperparameters
+hardhat::extract_parameter_set_dials(null_boosted_wflow)
 
-boosted_params <- parameters(boosted_model) |>  
+null_boosted_params <- parameters(null_boosted_wflow) |>  
   update(mtry = mtry(c(1, 14)), learn_rate = learn_rate(c(.075, .15)))
 
-# Build a tuning grid
-boosted_grid <- grid_regular(boosted_params, levels = 5)
+null_boosted_grid <- grid_regular(null_boosted_params, levels = 5)
 
-# tuning model  ----
+# featured hyperparameters
+hardhat::extract_parameter_set_dials(featured_boosted_wflow)
+
+featured_boosted_params <- parameters(featured_boosted_wflow) |>  
+  update(mtry = mtry(c(1, 14)), learn_rate = learn_rate(c(.075, .15)))
+
+featured_boosted_grid <- grid_regular(featured_boosted_params, levels = 5)
+
+# advanced hyperparameters
+hardhat::extract_parameter_set_dials(advanced_boosted_wflow)
+
+advanced_boosted_params <- parameters(advanced_boosted_wflow) |>  
+  update(mtry = mtry(c(1, 14)), learn_rate = learn_rate(c(.075, .15)))
+
+boosted_grid <- grid_regular(advanced_boosted_params, levels = 5)
+
+# tuning model----
+# null
 # set seed
 set.seed(0927074)
+null_boosted_tuned <- 
+  boosted_model |> 
+  tune_grid(
+    diabetic_fold, 
+    grid = null_boosted_grid, 
+    control = control_grid(save_workflow = TRUE)
+  )
 
-boosted_tuned <- 
+# featured
+# set seed
+set.seed(07841234)
+featured_boosted_tuned <- 
   boosted_model |> 
   tune_grid(
     carseats_fold, 
-    grid = boosted_grid, 
+    grid = featured_boosted_grid, 
+    control = control_grid(save_workflow = TRUE)
+  )
+
+# advanced
+set.seed(01894723)
+advanced_boosted_tuned <- 
+  boosted_model |> 
+  tune_grid(
+    carseats_fold, 
+    grid = advanced_boosted_grid, 
     control = control_grid(save_workflow = TRUE)
   )
 
 # write out results (tuned model) ----
-save(boosted_tuned, file = here("results/boosted_tuned.rda"))
-
-
+save(null_boosted_tuned, file = here("results/null_boosted_tuned.rda"))
+save(featured_boosted_tuned, file = here("results/featured_boosted_tuned.rda"))
+save(advanced_boosted_tuned, file = here("results/advanced_boosted_tuned.rda"))
