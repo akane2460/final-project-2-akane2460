@@ -107,8 +107,9 @@ diabetic_clean <- diabetic_clean |>
 
 # adjusting target variable----
   # readmitted has 3 categories
-    # in our case we only would like 2 (whether they returned to the hospital or not)
-      # for now
+    # in our case we only would like 2 (whether they returned to the hospital)
+
+# diabetic_clean$readmitted
 
 diabetic_clean <- diabetic_clean |> 
   mutate(
@@ -132,7 +133,7 @@ skim_without_charts(diabetic_clean)
 set.seed(2109480)
 sampled_diabetic <- diabetic_clean %>% 
   group_by(readmitted) %>% 
-  sample_n(size = 16000 / n_distinct(readmitted))
+  sample_n(size = 18000 / n_distinct(readmitted))
 
 # save out cleaned sample data----
 save(sampled_diabetic, file = here("data/sampled_diabetic.rda"))
