@@ -44,10 +44,10 @@ load(here("results/advanced_boosted_tuned.rda"))
 # load(here("results/null_fit_log_reg.rda"))
 # load(here("results/featured_fit_log_reg.rda"))
 # load(here("results/advanced_fit_log_reg.rda"))
-# # knn
-# load(here("results/null_fit_log_reg.rda"))
-# load(here("results/featured_fit_log_reg.rda"))
-# load(here("results/advanced_fit_log_reg.rda"))
+# knn
+load(here("results/null_knn_tuned.rda"))
+load(here("results/featured_knn_tuned.rda"))
+load(here("results/advanced_knn_tuned.rda"))
 
 # assessment of resamples----
 
@@ -137,6 +137,28 @@ boosted_max_accuracy |>
   knitr::kable()
 
 # performs best on null
+
+# knn----
+knn_model_set <- as_workflow_set(
+  knn_null = null_knn_tuned,
+  knn_featured = featured_knn_tuned,
+  knn_advanced = advanced_knn_tuned
+)
+
+knn_accuracy_metrics <- knn_model_set |>
+  collect_metrics() |>
+  filter(.metric == "accuracy")
+
+knn_max_accuracy <- knn_accuracy_metrics |>
+  group_by(wflow_id) |>
+  slice_max(mean) |>
+  distinct(wflow_id, .keep_all = TRUE)
+
+knn_max_accuracy |>
+  select(wflow_id, .metric, mean, std_err) |>
+  knitr::kable()
+
+# performs best on advanced
 
 # overall assessment----
 model_set <- as_workflow_set(
