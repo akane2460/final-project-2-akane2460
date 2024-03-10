@@ -61,7 +61,7 @@ advanced_knn_wflow <-
 hardhat::extract_parameter_set_dials(null_knn_wflow)
 
 null_knn_params <- parameters(null_knn_wflow) |>  
-  update(neighbors = neighbors())
+  update(neighbors = neighbors(c(1,11)))
 
 null_knn_grid <- grid_regular(null_knn_params, levels = 8)
 
@@ -69,7 +69,7 @@ null_knn_grid <- grid_regular(null_knn_params, levels = 8)
 hardhat::extract_parameter_set_dials(featured_knn_wflow)
 
 featured_knn_params <- parameters(featured_knn_wflow) |>  
-  update(neighbors = neighbors())
+  update(neighbors = neighbors(c(1,11)))
 
 featured_knn_grid <- grid_regular(featured_knn_params, levels = 8)
 
@@ -77,7 +77,7 @@ featured_knn_grid <- grid_regular(featured_knn_params, levels = 8)
 hardhat::extract_parameter_set_dials(advanced_knn_wflow)
 
 advanced_knn_params <- parameters(advanced_knn_wflow) |>  
-  update(neighbors = neighbors())
+  update(neighbors = neighbors(c(1,11)))
 
 advanced_knn_grid <- grid_regular(advanced_knn_params, levels = 8)
 

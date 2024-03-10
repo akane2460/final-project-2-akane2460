@@ -44,3 +44,6 @@
 results/advanced_boosted_tuned.rda
 results/featured_boosted_tuned.rda
 results/null_boosted_tuned.rda
+results/null_knn_tuned.rda
+results/featured_knn_tuned.rda
+results/advanced_knn_tuned.rda
