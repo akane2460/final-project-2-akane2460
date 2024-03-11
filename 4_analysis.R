@@ -43,7 +43,9 @@ load(here("results/advanced_boosted_tuned.rda"))
 # # en
 # load(here("results/null_fit_log_reg.rda"))
 # load(here("results/featured_fit_log_reg.rda"))
-# load(here("results/advanced_fit_log_reg.rda"))
+load(here("results/null_en_tuned.rda"))
+
+
 # knn
 load(here("results/null_knn_tuned.rda"))
 load(here("results/featured_knn_tuned.rda"))
@@ -167,6 +169,30 @@ knn_max_accuracy |>
 
 best_results_knn <- select_best(advanced_knn_tuned, metric = "accuracy")
   # 11 neighbors is best hyperparameter
+
+# en----
+en_model_set <- as_workflow_set(
+  en_null = null_en_tuned
+)
+
+en_accuracy_metrics <- en_model_set |>
+  collect_metrics() |>
+  filter(.metric == "accuracy")
+
+en_max_accuracy <- en_accuracy_metrics |>
+  group_by(wflow_id) |>
+  slice_max(mean) |>
+  distinct(wflow_id, .keep_all = TRUE)
+
+en_max_accuracy |>
+  select(wflow_id, .metric, mean, std_err) |>
+  knitr::kable()
+
+# performs best on advanced
+
+best_results_en <- select_best(null_en_tuned, metric = "accuracy")
+# 11 neighbors is best hyperparameter
+
 
 # overall assessment----
 model_set <- as_workflow_set(
