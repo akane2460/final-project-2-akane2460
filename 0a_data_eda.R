@@ -73,7 +73,7 @@ diabetic_data |> skimr::skim_without_charts()
   
   # below includes variables that are most likely to be included in the recipe,
   # checking for missingness issues in these variables specifically
-  diabetic_NA_summary <- diabetic_clean |> 
+  diabetic_NA_summary <- diabetic_data |> 
     summarise(
       NA_race = sum(is.na(race)),
       NA_age = sum(is.na(age)),
@@ -94,7 +94,7 @@ diabetic_data |> skimr::skim_without_charts()
       # NA_ = sum(is.na()),
     )
   
-  diabetic_variance_summary <- diabetic_clean |> 
+  diabetic_variance_summary <- diabetic_data |> 
     summarise(
       sd_num_lab_procedures = sd(num_lab_procedures),
       sd_num_procedures = sd(num_procedures),
@@ -130,7 +130,7 @@ diabetic_data |> skimr::skim_without_charts()
       title = "Racial Demographics of Diabetic Patients Admitted to Hospital"
     )
   
-  ggsave(here("results/race_demographics_plot.png"), race_demographics_plot)
+  ggsave(here("plots/race_demographics_plot.png"), race_demographics_plot)
   
   # gender
   gender_demographics_plot <- diabetic_data |> 
@@ -142,7 +142,7 @@ diabetic_data |> skimr::skim_without_charts()
       title = "Gender Demographics of Diabetic Patients Admitted to Hospital"
     )
   
-  ggsave(here("results/gender_demographics_plot.png"), gender_demographics_plot)
+  ggsave(here("plots/gender_demographics_plot.png"), gender_demographics_plot)
   
   # age
   age_demographics_plot <- diabetic_data |> 
@@ -154,7 +154,7 @@ diabetic_data |> skimr::skim_without_charts()
       title = "Age Demographics of Diabetic Patients Admitted to Hospital"
     )
   
-  ggsave(here("results/age_demographics_plot.png"), age_demographics_plot)
+  ggsave(here("plots/age_demographics_plot.png"), age_demographics_plot)
   
   # max_glu_serum
   diabetic_data |> 
@@ -1461,7 +1461,7 @@ diabetic_data |> skimr::skim_without_charts()
           )
         
         ggsave(here("memos/results/readmitted_plot.png"), readmitted_plot)
-        ggsave(here("results/readmitted_plot/png"), readmitted_plot)
+        ggsave(here("plots/readmitted_plot.png"), readmitted_plot)
         
         readmitted_table <- diabetic_data |> 
           summarize(
