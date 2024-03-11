@@ -116,6 +116,7 @@ lasso_max_accuracy |>
 
   # performs best on all 3
 
+# elastic net----
 # boosted----
 boosted_model_set <- as_workflow_set(
   boosted_null = null_boosted_tuned,
@@ -137,6 +138,10 @@ boosted_max_accuracy |>
   knitr::kable()
 
 # performs best on null
+
+best_results_boosted <- select_best(null_boosted_tuned, metric = "accuracy")
+#  mtry = 2, min_n = 40 and learn_rate = 1.02 best hyperparameters
+
 
 # knn----
 knn_model_set <- as_workflow_set(
@@ -160,26 +165,32 @@ knn_max_accuracy |>
 
 # performs best on advanced
 
+best_results_knn <- select_best(advanced_knn_tuned, metric = "accuracy")
+  # 11 neighbors is best hyperparameter
+
 # overall assessment----
 model_set <- as_workflow_set(
+  # null
   log_reg_null = null_fit_log_reg,
   ridge_null = null_fit_log_reg,
   lasso_null = null_fit_lasso,
-  # boosted_null = null_fit_log_reg,
+  boosted_null = null_boosted_tuned,
   # en_null = null_fit_log_reg,
-  # knn_null = null_fit_log_reg,
+  knn_null = null_knn_tuned,
+  # featured
   log_reg_featured = featured_fit_log_reg,
   ridge_featured = featured_fit_ridge,
   lasso_featured = featured_fit_lasso,
-  # boosted_null = null_fit_log_reg,
+  boosted_featured = featured_boosted_tuned,
   # en_null = null_fit_log_reg,
-  # knn_null = null_fit_log_reg,
+  # advanced
+  knn_featured = featured_knn_tuned,
   log_reg_advanced = advanced_fit_log_reg,
   ridge_advanced = advanced_fit_ridge,
-  lasso_advanced = advanced_fit_lasso
-  # boosted_null = null_fit_log_reg,
+  lasso_advanced = advanced_fit_lasso,
+  boosted_advanced = advanced_boosted_tuned,
   # en_null = null_fit_log_reg,
-  # knn_null = null_fit_log_reg,
+  knn_advanced = advanced_knn_tuned
 )
 
 accuracy_metrics <- model_set |>
@@ -195,7 +206,5 @@ max_accuracy |>
   select(wflow_id, .metric, mean, std_err) |>
   knitr::kable()
 
-# # look at best results parameters rf
-# best_results_rf <- select_best(rf_tuned, metric = "accuracy")
 
 
