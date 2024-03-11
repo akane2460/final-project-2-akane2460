@@ -36,16 +36,14 @@ load(here("results/advanced_fit_lasso.rda"))
 load(here("results/null_fit_ridge.rda"))
 load(here("results/featured_fit_ridge.rda"))
 load(here("results/advanced_fit_ridge.rda"))
-# # boosted
+# boosted
 load(here("results/null_boosted_tuned.rda"))
 load(here("results/featured_boosted_tuned.rda"))
 load(here("results/advanced_boosted_tuned.rda"))
-# # en
-# load(here("results/null_fit_log_reg.rda"))
-# load(here("results/featured_fit_log_reg.rda"))
+# en
 load(here("results/null_en_tuned.rda"))
-
-
+load(here("results/featured_en_tuned.rda"))
+load(here("results/advanced_en_tuned.rda"))
 # knn
 load(here("results/null_knn_tuned.rda"))
 load(here("results/featured_knn_tuned.rda"))
@@ -118,7 +116,6 @@ lasso_max_accuracy |>
 
   # performs best on all 3
 
-# elastic net----
 # boosted----
 boosted_model_set <- as_workflow_set(
   boosted_null = null_boosted_tuned,
@@ -172,7 +169,9 @@ best_results_knn <- select_best(advanced_knn_tuned, metric = "accuracy")
 
 # en----
 en_model_set <- as_workflow_set(
-  en_null = null_en_tuned
+  en_null = null_en_tuned,
+  en_featured = featured_en_tuned,
+  en_advanced = advanced_en_tuned
 )
 
 en_accuracy_metrics <- en_model_set |>
@@ -190,9 +189,8 @@ en_max_accuracy |>
 
 # performs best on advanced
 
-best_results_en <- select_best(null_en_tuned, metric = "accuracy")
-# 11 neighbors is best hyperparameter
-
+best_results_en <- select_best(advanced_en_tuned, metric = "accuracy")
+# 1 penalty 0 mixture best hyperparameters
 
 # overall assessment----
 model_set <- as_workflow_set(
