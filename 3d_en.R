@@ -82,8 +82,6 @@ advanced_fit_en <- advanced_en_wflow |>
     control = control_resamples(save_workflow = TRUE)
   )
 
-# fit_lasso <- fit(lasso_wflow, diabetic_train)
-
 # write out results (fitted/trained workflows) ----
 save(null_fit_en, file = here("results/null_fit_en.rda"))
 save(featured_fit_en, file = here("results/featured_fit_en.rda"))
