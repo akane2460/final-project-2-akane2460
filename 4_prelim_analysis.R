@@ -199,21 +199,21 @@ model_set <- as_workflow_set(
   ridge_null = null_fit_log_reg,
   lasso_null = null_fit_lasso,
   boosted_null = null_boosted_tuned,
-  # en_null = null_fit_log_reg,
+  en_null = null_en_tuned,
   knn_null = null_knn_tuned,
   # featured
   log_reg_featured = featured_fit_log_reg,
   ridge_featured = featured_fit_ridge,
   lasso_featured = featured_fit_lasso,
   boosted_featured = featured_boosted_tuned,
-  # en_null = null_fit_log_reg,
-  # advanced
+  en_featured = featured_en_tuned,
   knn_featured = featured_knn_tuned,
+  # advanced
   log_reg_advanced = advanced_fit_log_reg,
   ridge_advanced = advanced_fit_ridge,
   lasso_advanced = advanced_fit_lasso,
   boosted_advanced = advanced_boosted_tuned,
-  # en_null = null_fit_log_reg,
+  en_advanced = advanced_en_tuned,
   knn_advanced = advanced_knn_tuned
 )
 
@@ -230,5 +230,9 @@ max_accuracy |>
   select(wflow_id, .metric, mean, std_err) |>
   knitr::kable()
 
+best_model_order <- max_accuracy |> 
+  arrange(desc(mean))
 
-
+  # ridge model trained on the advanced recipe best performing model
+  
+  
