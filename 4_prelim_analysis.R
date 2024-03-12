@@ -1,8 +1,7 @@
 # Final project  ----
 # Stat 301-1
-# Define and fit logistic regression
-
-# note: not fitted to folds yet
+# Analyzing preliminary fits and tunes of models
+# Goal: determining the best performing model
 
 # load packages ----
 library(tidyverse)

@@ -85,8 +85,6 @@ advanced_fit_ridge <- advanced_ridge_wflow |>
     control = control_resamples(save_workflow = TRUE)
   )
 
-# fit_lasso <- fit(lasso_wflow, diabetic_train)
-
 # write out results (fitted/trained workflows) ----
 save(null_fit_ridge, file = here("results/null_fit_ridge.rda"))
 save(featured_fit_ridge, file = here("results/featured_fit_ridge.rda"))
