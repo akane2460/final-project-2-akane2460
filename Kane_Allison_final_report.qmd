@@ -42,7 +42,7 @@ This report is determining the risk of readmittance of diabetic patients to the 
 
 ## Data overview
 
-  This report is examining the response variable `readmitted` as it varies based on demographic factors, medications, test results and hospital stay information. A subset of the original dataset has been chosen for analysis, with 40,000 observations (patients) to facilitate sufficient data for model building while remaining within computer processing limits. 
+  This report is examining the response variable `readmitted` as it varies based on demographic factors, medications, test results and hospital stay information. A subset of the original dataset has been chosen for analysis, approximately 36,000 observations (patients) to facilitate sufficient data for model building while remaining within computer processing limits. 
   
 ### Data issues
 
@@ -50,14 +50,14 @@ This report is determining the risk of readmittance of diabetic patients to the 
   Some variables exhibited serious missingness issues, including `medical_specialty`, `payer_code`, and `weight`. `medical_specialty` and `payer_code` did not seem as relevant to our prediciton problem; `weight` however would have been an important variable to assess. However, substantial issues with the `weight` variable (i.e. many adult patients reporting weights within the 50-60 pounds range) that indicated weight reporting was not accurate or correct in the initial dataset. These three variables were removed from the dataset entirely due to these issues.
 
 #### Severe Class Imbalance
-  There were some issues with severe class imbalances. Certain medications listed had severe class imbalances to the point where they were not worth including in our modeling and analysis. Variables with slight imbalances, where the second most common category had at least 1000 observations, were still included **if** they were deemed extremely relevant to patient experience. Race for example had some imbalances with Asian, and Hispanic populations being underrepresented. However, since racial biases of medical practitioners can play a strong role in the quality and type patient care received, excluding it from analysis could be detrimental to understanding patient readmittance risk. 
+  There were some issues with severe class imbalances. Certain medications listed had severe class imbalances to the point where they were not worth including in our modeling and analysis. Variables with slight imbalances, where the second most common category had at least 1000 observations, were still included **if** they were deemed extremely relevant to patient experience. Race for example had some imbalances with Asian, Hispanic, and Other racial groups being underrepresented. However, since racial biases of medical practitioners can play a strong role in the quality and type patient care received, excluding it from analysis could be detrimental to understanding patient readmittance risk. 
   
 ### Response Variable: Readmittance
 
 
 ![Diabetic Patients Readmitted to Hospital](plots/readmitted_plot.png){#fig-1}
 
-   In @fig-1 There is a fairly even balance of patients readmitted to the hospital versus not. Among patients readmitted, a larger portion of them were readmitted after 30 days following their discharge. Understanding how `readmitted` varies based on aspects like gender, age, race, etc. is critical. For the sake of this project, we want to examine if a patient is simply readmitted or not. 
+   In @fig-1 There is a fairly even balance of patients readmitted to the hospital versus not. Among patients readmitted, a larger portion of them were readmitted after 30 days following their discharge. For the sake of this project, we want to examine if a patient is simply readmitted or not. 
 
 
 | Percent_No| Percent_Yes|
@@ -65,7 +65,7 @@ This report is determining the risk of readmittance of diabetic patients to the 
 |   53.56575|    46.43425|
   : Readmittance to Hospital {#tbl-1}
 
-In @tbl-1, generally, we see that approximately 54% of patients are not readmitted, while 46% are. With such a large percentage of patients being readmitted, it is critical to understand who is most at risk.
+In @tbl-1, generally, we see that approximately 54% of patients are not readmitted, while 46% are. With such a large percentage of patients being readmitted, it is critical to understand who is most at risk. However, understanding how `readmitted` varies based on aspects like gender, age, race, etc. is critical.
 
 
 ### Gender
@@ -103,7 +103,7 @@ In @fig-5, broken down further, the readmittance rates are fairly even across ag
 
 ![Race Demographics](plots/race_demographics_plot.png){#fig-6}
 
-In @fig-6, generally, we see a majority of patients identifying as Causasian, with a sizable minority of patients identifying as African American. Small percentages of patients identified as Asian, Hispanic, and Other. 
+In @fig-6, generally, we see a majority of patients identifying as Causasian, with a sizable minority of patients identifying as African American. Small percentages of patients identified as Asian, Hispanic, and Other reported.
 
 #### Race and Readmitted
 
@@ -118,12 +118,13 @@ Among analyses, variables that seemed worth investigating in their contributions
 
 #### Potential Relationships Among Predictors
 Potential confounding effects between predictor variables are critical to identify. Relationships between variables have been identified including potential interactions: 
-  - `time_in_hospital` and `num_medications`, `num_lab_procedures`
-  - `num_procedures` and `num_medications`
-  - `age` and `num_diagnoses`, `time_in_hospital`, `number_inpatient`
-  - `gender` and `time_in_hospital`
-  - `race` and `number_diagnoses`
-  - `num_lab_procedures` and `a1cresult`, `insulin`, `metformin`
+  
+  * `time_in_hospital` and `num_medications`, `num_lab_procedures`
+  * `num_procedures` and `num_medications`
+  * `age` and `num_diagnoses`, `time_in_hospital`, `number_inpatient`
+  * `gender` and `time_in_hospital`
+  * `race` and `number_diagnoses`
+  * `num_lab_procedures` and `a1cresult`, `insulin`, `metformin`
 How these interactions affect a model's performance and ability to accurately predict a patient's readmittance to the hospital will be determined.
         
 # Methods
@@ -133,36 +134,100 @@ This prediction problem is a classification problem, seeking to identify whether
 
 ### Models and Parameters
 The following model types are to be used: logistic regression, lasso, ridge, elastic net, k-nearest neighbors and boosted tree. Parameters to be tuned in these models include: 
-  - Mixture and penalty for elastic net
-  - Neighbors for k-nearest neighbors
-  - Mtry, min_n and learn_rate for boosted tree
+  * Mixture and penalty for elastic net
+  * Neighbors for k-nearest neighbors
+  * Mtry, min_n and learn_rate for boosted tree
+  
+### Resampling Method
+The resampling method used was taking five folds of the `diabetic_train` data and repeating the process three times. These resamples allow for a more robust assessment of model performance across different subsets of data.
   
 ### Recipes
 Three recipes are to be use: a null/baseline recipe, a featured recipe and an advanced featured recipe.
 
 In the null/baseline model, the following predictors are considered: age, race, gender, max_glu_serum, a1cresult, change, num_lab_procedures, num_procedures, num_medications, number_diagnoses, time_in_hospital, number_outpatient, and number_inpatient. The recipe identified and removed predictors with little to no variance, centered and scaled all numeric predictors and converted categorical predictors into dummy variables. Interactions were not considered.
 
-In the featured model, the same predictors are considered as the null model. The recipe identified and removed predictors with little to no variance, centered and scaled all numeric predictors and converted categorical predictors into dummy variables. Interactions were considered. Interactions between the following were encoded:   
-  - `time_in_hospital` and `num_medications`, `num_lab_procedures`
-  - `num_procedures` and `num_medications`
-  - `age` and `num_diagnoses`, `time_in_hospital`, `number_inpatient`
-  - `gender` and `time_in_hospital`
-  - `race` and `number_diagnoses`
-  - `num_lab_procedures` and `a1cresult`
+In the featured model, the same predictors are considered as the null model. The recipe identified and removed predictors with little to no variance, centered and scaled all numeric predictors and converted categorical predictors into dummy variables. Interactions were considered. Interactions between the following were encoded:  
+
+  * `time_in_hospital` and `num_medications`, `num_lab_procedures`
+  * `num_procedures` and `num_medications`
+  * `age` and `num_diagnoses`, `time_in_hospital`, `number_inpatient`
+  * `gender` and `time_in_hospital`
+  * `race` and `number_diagnoses`
+  * `num_lab_procedures` and `a1cresult`
 
 In the advanced featured model, changes to the predictors were made. Most specifically, the variable `change` is a broader category indicating if there were changes to diabetes medications made. In this recipe, however, specific medications are considered. The following predictors are considered: age, race, gender, max_glu_serum, a1cresult, metformin, insulin, metformin, num_lab_procedures, num_procedures, num_medications, number_diagnoses, time_in_hospital, number_outpatient, number_inpatient, rosiglitazone, pioglitazone, glyburide, glipizide, and glimepiride. The recipe identified and removed predictors with little to no variance, centered and scaled all numeric predictors and converted categorical predictors into dummy variables. Interactions were considered. Interactions between the following were encoded:   
-  - `time_in_hospital` and `num_medications`, `num_lab_procedures`
-  - `num_procedures` and `num_medications`
-  - `age` and `num_diagnoses`, `time_in_hospital`, `number_inpatient`
-  - `gender` and `time_in_hospital`
-  - `race` and `number_diagnoses`
-  - `num_lab_procedures` and `a1cresult`, `insulin`, `metformin`
+
+  * `time_in_hospital` and `num_medications`, `num_lab_procedures`
+  * `num_procedures` and `num_medications`
+  * `age` and `num_diagnoses`, `time_in_hospital`, `number_inpatient`
+  * `gender` and `time_in_hospital`
+  * `race` and `number_diagnoses`
+  * `num_lab_procedures` and `a1cresult`, `insulin`, `metformin`
 
 ### Metric and Comparisons
 Accuracy will be used to determine how effective a model is in predicting a patient's return to hospital following their discharge.
 
+# Model Building and Selection Results
 
+|model            |.metric  | mean accuracy|   std_err|
+|:----------------|:--------|-------------:|---------:|
+|ridge_advanced   |accuracy |     0.6098032| 0.0014028|
+|log_reg_advanced |accuracy |     0.6091667| 0.0015235|
+|ridge_featured   |accuracy |     0.6087269| 0.0012729|
+|log_reg_featured |accuracy |     0.6085648| 0.0012769|
+|log_reg_null     |accuracy |     0.6078935| 0.0015718|
+|ridge_null       |accuracy |     0.6078935| 0.0015718|
+|boosted_null     |accuracy |     0.6078819| 0.0020409|
+|boosted_featured |accuracy |     0.6033796| 0.0020395|
+|en_advanced      |accuracy |     0.5996528| 0.0014706|
+|en_featured      |accuracy |     0.5990625| 0.0013625|
+|boosted_advanced |accuracy |     0.5987269| 0.0017259|
+|en_null          |accuracy |     0.5969329| 0.0018321|
+|knn_advanced     |accuracy |     0.5624537| 0.0010712|
+|knn_featured     |accuracy |     0.5618981| 0.0008922|
+|knn_null         |accuracy |     0.5613194| 0.0015192|
+|lasso_advanced   |accuracy |     0.4937963| 0.0012432|
+|lasso_featured   |accuracy |     0.4937963| 0.0012432|
+|lasso_null       |accuracy |     0.4937963| 0.0012432|
+  : Performance of All Models-- Best to Worst {#tbl-2}
 
+In @tbl-2, when comparing the accuracies of each of the models fitted to each of the recipes, the best performing model was the ridge model fitted to an advanced recipe. This model had an accuracy of approximately .610 with a standard error of .0014. The logistic regression model fitted to the advanced recipe was very close to this value, with an accuracy of approximately .609 and a standard error of .0015. 
 
+### Best Parameters
+In examining the tuning of models, we saw that in the best performing elastic net model (trained to the advanced recipe), the most optimal parameters were 1 and 0 for penalty and mixture respectively. This is in line with the best performing model, a ridge model in which penalty and mixture are preset to the same values. This tuning further strengthens our conclusion that ridge trained on advanced recipe is the best performing model. As for the other tuned models, the best parameter values for are as follows:
 
+  * For the best performing boosted model (`boosted_null`), best parameters include  mtry = 2, min_n = 40 and learn_rate = 1.02
+  * For the best performing knn model (`knn_advanced`), best parameters include 11 neighbors. 
+Further tuning could be explored in the future, assessing perhaps more parameters in boosted and knn models including number/depth of trees and distance parameters in each respectively. These were not included in this analysis due to computer processing limitations.
 
+### Recipe Variations
+Generally in @tbl-2, we see better performance of most model types (with the exceptio of boosted) on the advanced recipe. This could indicate that specifying the specific medication types, as we did in the advanced recipe, can provide a better prediction of whether a patient will return to the hospital or not.
+
+### Best Model 
+Overall, the best and final model is the advanced ridge model. This is not surprising, as most models generally performed better with an advanced recipe and, given our elastic net tuning results, a ridge approach is most optimal for predicting hospital readmittance. 
+
+# Final Model Analysis
+|.metric  |.estimator | .estimate|
+|:--------|:----------|---------:|
+|accuracy |binary     | 0.5966667|
+  : Final Model Performance on Testing Set {#tbl-3}
+
+In @tbl-3, we can see the model performs with approximately 59.7% accuracy on the testing set.
+
+|    |   NO|  YES|
+|:---|----:|----:|
+|NO  | 2460| 1764|
+|YES | 1140| 1836|
+  : Confusion Matrix on Final Model {#tbl-4}
+
+In @tbl-4, we can see that the model accurately predicts that 2460 patients will not return (true negative) and accurately predicts that 1836 patients will return (true positive). However, it predicted that 1764 patients would return that did not (false positives) and predicted 1140 patients that would not return but did (false negative).
+
+The model performs better than random chance at predicting whether diabetic patients will return to the hospital following their discharge. This model did not perform substantially better than a null model, with the best performing null model being the logistic regression with an accuracy of approximately 60.8%. The inclusion of more specific diabetes medications provides a marginal improvement in the overall accuracy of the model, making the advanced recipe ridge model the best performing.
+
+# Conclusions 
+
+Overall, this process produced models that were somewhat accurate in predicting whether a diabetic patient will return to the hospital after being discharged. However, its accuracy could be improved substantially. Factors like age of diagnosis, severity of diabetes, care situation (essentially is their diabetes self-managed? is it managed for them in a facility like a nursing home? etc.), other health conditions, weight (more accurate report of weight needed, even just general assessments of patient's BMI), and exercise frequency and intensity could be important factors in determining if a patient will return to the hospital. Future work could include these factors in determining patient risk for returning. Additionally, further research could include analyzing whether patients who returned less than 30 days after discharge have different health/demographic factors than patients who returned more than 30 days after discharge. Ultimately, assessing rehopsitalization risk is critical in ensuring proper care and appropriate planning for patients with diabetes. 
+
+# References
+
+Clore, John, Cios, Krzysztof, DeShazo, Jon, and Strack, Beata. (2014). Diabetes 130-US hospitals for years 1999-2008. UCI Machine Learning Repository.[ https://doi.org/10.24432/C5230J.](https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008)]

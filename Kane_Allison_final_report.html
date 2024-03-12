@@ -3055,9 +3055,19 @@ vertical-align: -.125em;
   <ul class="collapse">
   <li><a href="#prediciton-problem-and-data-splitting" id="toc-prediciton-problem-and-data-splitting" class="nav-link" data-scroll-target="#prediciton-problem-and-data-splitting">Prediciton Problem and Data Splitting</a></li>
   <li><a href="#models-and-parameters" id="toc-models-and-parameters" class="nav-link" data-scroll-target="#models-and-parameters">Models and Parameters</a></li>
+  <li><a href="#resampling-method" id="toc-resampling-method" class="nav-link" data-scroll-target="#resampling-method">Resampling Method</a></li>
   <li><a href="#recipes" id="toc-recipes" class="nav-link" data-scroll-target="#recipes">Recipes</a></li>
   <li><a href="#metric-and-comparisons" id="toc-metric-and-comparisons" class="nav-link" data-scroll-target="#metric-and-comparisons">Metric and Comparisons</a></li>
   </ul></li>
+  <li><a href="#model-building-and-selection-results" id="toc-model-building-and-selection-results" class="nav-link" data-scroll-target="#model-building-and-selection-results">Model Building and Selection Results</a>
+  <ul class="collapse">
+  <li><a href="#best-parameters" id="toc-best-parameters" class="nav-link" data-scroll-target="#best-parameters">Best Parameters</a></li>
+  <li><a href="#recipe-variations" id="toc-recipe-variations" class="nav-link" data-scroll-target="#recipe-variations">Recipe Variations</a></li>
+  <li><a href="#best-model" id="toc-best-model" class="nav-link" data-scroll-target="#best-model">Best Model</a></li>
+  </ul></li>
+  <li><a href="#final-model-analysis" id="toc-final-model-analysis" class="nav-link" data-scroll-target="#final-model-analysis">Final Model Analysis</a></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
 </div>
@@ -3128,7 +3138,7 @@ Prediction goal
 <div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup> Clore, John, Cios, Krzysztof, DeShazo, Jon, and Strack, Beata. (2014). Diabetes 130-US hospitals for years 1999-2008. UCI Machine Learning Repository.<a href="https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008">https://doi.org/10.24432/C5230J.</a></p></li></div></section>
 <section id="data-overview" class="level2">
 <h2 class="anchored" data-anchor-id="data-overview">Data overview</h2>
-<p>This report is examining the response variable <code>readmitted</code> as it varies based on demographic factors, medications, test results and hospital stay information. A subset of the original dataset has been chosen for analysis, with 40,000 observations (patients) to facilitate sufficient data for model building while remaining within computer processing limits.</p>
+<p>This report is examining the response variable <code>readmitted</code> as it varies based on demographic factors, medications, test results and hospital stay information. A subset of the original dataset has been chosen for analysis, approximately 36,000 observations (patients) to facilitate sufficient data for model building while remaining within computer processing limits.</p>
 <section id="data-issues" class="level3">
 <h3 class="anchored" data-anchor-id="data-issues">Data issues</h3>
 <section id="missingness" class="level4">
@@ -3137,7 +3147,7 @@ Prediction goal
 </section>
 <section id="severe-class-imbalance" class="level4">
 <h4 class="anchored" data-anchor-id="severe-class-imbalance">Severe Class Imbalance</h4>
-<p>There were some issues with severe class imbalances. Certain medications listed had severe class imbalances to the point where they were not worth including in our modeling and analysis. Variables with slight imbalances, where the second most common category had at least 1000 observations, were still included <strong>if</strong> they were deemed extremely relevant to patient experience. Race for example had some imbalances with Asian, and Hispanic populations being underrepresented. However, since racial biases of medical practitioners can play a strong role in the quality and type patient care received, excluding it from analysis could be detrimental to understanding patient readmittance risk.</p>
+<p>There were some issues with severe class imbalances. Certain medications listed had severe class imbalances to the point where they were not worth including in our modeling and analysis. Variables with slight imbalances, where the second most common category had at least 1000 observations, were still included <strong>if</strong> they were deemed extremely relevant to patient experience. Race for example had some imbalances with Asian, Hispanic, and Other racial groups being underrepresented. However, since racial biases of medical practitioners can play a strong role in the quality and type patient care received, excluding it from analysis could be detrimental to understanding patient readmittance risk.</p>
 </section>
 </section>
 <section id="response-variable-readmittance" class="level3">
@@ -3152,7 +3162,7 @@ Figure 1: Diabetic Patients Readmitted to Hospital
 </figcaption>
 </figure>
 </div>
-<p>In <a href="#fig-1" class="quarto-xref">Figure 1</a> There is a fairly even balance of patients readmitted to the hospital versus not. Among patients readmitted, a larger portion of them were readmitted after 30 days following their discharge. Understanding how <code>readmitted</code> varies based on aspects like gender, age, race, etc. is critical. For the sake of this project, we want to examine if a patient is simply readmitted or not.</p>
+<p>In <a href="#fig-1" class="quarto-xref">Figure 1</a> There is a fairly even balance of patients readmitted to the hospital versus not. Among patients readmitted, a larger portion of them were readmitted after 30 days following their discharge. For the sake of this project, we want to examine if a patient is simply readmitted or not.</p>
 <div id="tbl-1" class="anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -3176,7 +3186,7 @@ Table 1: Readmittance to Hospital
 </div>
 </figure>
 </div>
-<p>In <a href="#tbl-1" class="quarto-xref">Table 1</a>, generally, we see that approximately 54% of patients are not readmitted, while 46% are. With such a large percentage of patients being readmitted, it is critical to understand who is most at risk.</p>
+<p>In <a href="#tbl-1" class="quarto-xref">Table 1</a>, generally, we see that approximately 54% of patients are not readmitted, while 46% are. With such a large percentage of patients being readmitted, it is critical to understand who is most at risk. However, understanding how <code>readmitted</code> varies based on aspects like gender, age, race, etc. is critical.</p>
 </section>
 <section id="gender" class="level3">
 <h3 class="anchored" data-anchor-id="gender">Gender</h3>
@@ -3246,7 +3256,7 @@ Figure 6: Race Demographics
 </figcaption>
 </figure>
 </div>
-<p>In <a href="#fig-6" class="quarto-xref">Figure 6</a>, generally, we see a majority of patients identifying as Causasian, with a sizable minority of patients identifying as African American. Small percentages of patients identified as Asian, Hispanic, and Other.</p>
+<p>In <a href="#fig-6" class="quarto-xref">Figure 6</a>, generally, we see a majority of patients identifying as Causasian, with a sizable minority of patients identifying as African American. Small percentages of patients identified as Asian, Hispanic, and Other reported.</p>
 <section id="race-and-readmitted" class="level4">
 <h4 class="anchored" data-anchor-id="race-and-readmitted">Race and Readmitted</h4>
 <div id="fig-7" class="quarto-figure quarto-figure-center anchored">
@@ -3267,7 +3277,15 @@ Figure 7: Race and Readmitted
 <p>Among analyses, variables that seemed worth investigating in their contributions to readmittance risk for diabetic patients include <code>number_inpatient</code>, <code>number_outpatient</code>, <code>time_in_hospital</code>, <code>number_diagnoses</code>, <code>num_lab_procedures</code>, <code>num_medications</code>, <code>num_procedures</code>, <code>diabetes_med</code>, <code>insulin</code>, <code>rosiglitazone</code>, <code>pioglitazone</code>, <code>glyburide</code>, <code>glipizide</code>, <code>glimepiride</code>, <code>metformin</code>, <code>change</code>, <code>a1cresult</code>, <code>max_glu_serum</code>, <code>age</code>, <code>race</code>, and <code>gender</code>. All these variables appeared to be relevant, either by their importance to a patient’s medical treatment, their variation within readmittance rates, or their relevance to a patient’s general health. Variables excluded from further analysis typically did not meet these criteria. No one predictor reliable for assessing readmit risk alone, therefore they all must be examined in combination.</p>
 <section id="potential-relationships-among-predictors" class="level4">
 <h4 class="anchored" data-anchor-id="potential-relationships-among-predictors">Potential Relationships Among Predictors</h4>
-<p>Potential confounding effects between predictor variables are critical to identify. Relationships between variables have been identified including potential interactions: - <code>time_in_hospital</code> and <code>num_medications</code>, <code>num_lab_procedures</code> - <code>num_procedures</code> and <code>num_medications</code> - <code>age</code> and <code>num_diagnoses</code>, <code>time_in_hospital</code>, <code>number_inpatient</code> - <code>gender</code> and <code>time_in_hospital</code> - <code>race</code> and <code>number_diagnoses</code> - <code>num_lab_procedures</code> and <code>a1cresult</code>, <code>insulin</code>, <code>metformin</code> How these interactions affect a model’s performance and ability to accurately predict a patient’s readmittance to the hospital will be determined.</p>
+<p>Potential confounding effects between predictor variables are critical to identify. Relationships between variables have been identified including potential interactions:</p>
+<ul>
+<li><code>time_in_hospital</code> and <code>num_medications</code>, <code>num_lab_procedures</code></li>
+<li><code>num_procedures</code> and <code>num_medications</code></li>
+<li><code>age</code> and <code>num_diagnoses</code>, <code>time_in_hospital</code>, <code>number_inpatient</code></li>
+<li><code>gender</code> and <code>time_in_hospital</code></li>
+<li><code>race</code> and <code>number_diagnoses</code></li>
+<li><code>num_lab_procedures</code> and <code>a1cresult</code>, <code>insulin</code>, <code>metformin</code> How these interactions affect a model’s performance and ability to accurately predict a patient’s readmittance to the hospital will be determined.</li>
+</ul>
 </section>
 </section>
 </section>
@@ -3279,21 +3297,257 @@ Figure 7: Race and Readmitted
 </section>
 <section id="models-and-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="models-and-parameters">Models and Parameters</h3>
-<p>The following model types are to be used: logistic regression, lasso, ridge, elastic net, k-nearest neighbors and boosted tree. Parameters to be tuned in these models include: - Mixture and penalty for elastic net - Neighbors for k-nearest neighbors - Mtry, min_n and learn_rate for boosted tree</p>
+<p>The following model types are to be used: logistic regression, lasso, ridge, elastic net, k-nearest neighbors and boosted tree. Parameters to be tuned in these models include: * Mixture and penalty for elastic net * Neighbors for k-nearest neighbors * Mtry, min_n and learn_rate for boosted tree</p>
+</section>
+<section id="resampling-method" class="level3">
+<h3 class="anchored" data-anchor-id="resampling-method">Resampling Method</h3>
+<p>The resampling method used was taking five folds of the <code>diabetic_train</code> data and repeating the process three times. These resamples allow for a more robust assessment of model performance across different subsets of data.</p>
 </section>
 <section id="recipes" class="level3">
 <h3 class="anchored" data-anchor-id="recipes">Recipes</h3>
 <p>Three recipes are to be use: a null/baseline recipe, a featured recipe and an advanced featured recipe.</p>
 <p>In the null/baseline model, the following predictors are considered: age, race, gender, max_glu_serum, a1cresult, change, num_lab_procedures, num_procedures, num_medications, number_diagnoses, time_in_hospital, number_outpatient, and number_inpatient. The recipe identified and removed predictors with little to no variance, centered and scaled all numeric predictors and converted categorical predictors into dummy variables. Interactions were not considered.</p>
-<p>In the featured model, the same predictors are considered as the null model. The recipe identified and removed predictors with little to no variance, centered and scaled all numeric predictors and converted categorical predictors into dummy variables. Interactions were considered. Interactions between the following were encoded:<br>
-- <code>time_in_hospital</code> and <code>num_medications</code>, <code>num_lab_procedures</code> - <code>num_procedures</code> and <code>num_medications</code> - <code>age</code> and <code>num_diagnoses</code>, <code>time_in_hospital</code>, <code>number_inpatient</code> - <code>gender</code> and <code>time_in_hospital</code> - <code>race</code> and <code>number_diagnoses</code> - <code>num_lab_procedures</code> and <code>a1cresult</code></p>
-<p>In the advanced featured model, changes to the predictors were made. Most specifically, the variable <code>change</code> is a broader category indicating if there were changes to diabetes medications made. In this recipe, however, specific medications are considered. The following predictors are considered: age, race, gender, max_glu_serum, a1cresult, metformin, insulin, metformin, num_lab_procedures, num_procedures, num_medications, number_diagnoses, time_in_hospital, number_outpatient, number_inpatient, rosiglitazone, pioglitazone, glyburide, glipizide, and glimepiride. The recipe identified and removed predictors with little to no variance, centered and scaled all numeric predictors and converted categorical predictors into dummy variables. Interactions were considered. Interactions between the following were encoded:<br>
-- <code>time_in_hospital</code> and <code>num_medications</code>, <code>num_lab_procedures</code> - <code>num_procedures</code> and <code>num_medications</code> - <code>age</code> and <code>num_diagnoses</code>, <code>time_in_hospital</code>, <code>number_inpatient</code> - <code>gender</code> and <code>time_in_hospital</code> - <code>race</code> and <code>number_diagnoses</code> - <code>num_lab_procedures</code> and <code>a1cresult</code>, <code>insulin</code>, <code>metformin</code></p>
+<p>In the featured model, the same predictors are considered as the null model. The recipe identified and removed predictors with little to no variance, centered and scaled all numeric predictors and converted categorical predictors into dummy variables. Interactions were considered. Interactions between the following were encoded:</p>
+<ul>
+<li><code>time_in_hospital</code> and <code>num_medications</code>, <code>num_lab_procedures</code></li>
+<li><code>num_procedures</code> and <code>num_medications</code></li>
+<li><code>age</code> and <code>num_diagnoses</code>, <code>time_in_hospital</code>, <code>number_inpatient</code></li>
+<li><code>gender</code> and <code>time_in_hospital</code></li>
+<li><code>race</code> and <code>number_diagnoses</code></li>
+<li><code>num_lab_procedures</code> and <code>a1cresult</code></li>
+</ul>
+<p>In the advanced featured model, changes to the predictors were made. Most specifically, the variable <code>change</code> is a broader category indicating if there were changes to diabetes medications made. In this recipe, however, specific medications are considered. The following predictors are considered: age, race, gender, max_glu_serum, a1cresult, metformin, insulin, metformin, num_lab_procedures, num_procedures, num_medications, number_diagnoses, time_in_hospital, number_outpatient, number_inpatient, rosiglitazone, pioglitazone, glyburide, glipizide, and glimepiride. The recipe identified and removed predictors with little to no variance, centered and scaled all numeric predictors and converted categorical predictors into dummy variables. Interactions were considered. Interactions between the following were encoded:</p>
+<ul>
+<li><code>time_in_hospital</code> and <code>num_medications</code>, <code>num_lab_procedures</code></li>
+<li><code>num_procedures</code> and <code>num_medications</code></li>
+<li><code>age</code> and <code>num_diagnoses</code>, <code>time_in_hospital</code>, <code>number_inpatient</code></li>
+<li><code>gender</code> and <code>time_in_hospital</code></li>
+<li><code>race</code> and <code>number_diagnoses</code></li>
+<li><code>num_lab_procedures</code> and <code>a1cresult</code>, <code>insulin</code>, <code>metformin</code></li>
+</ul>
 </section>
 <section id="metric-and-comparisons" class="level3">
 <h3 class="anchored" data-anchor-id="metric-and-comparisons">Metric and Comparisons</h3>
 <p>Accuracy will be used to determine how effective a model is in predicting a patient’s return to hospital following their discharge.</p>
 </section>
+</section>
+<section id="model-building-and-selection-results" class="level1">
+<h1>Model Building and Selection Results</h1>
+<div id="tbl-2" class="anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 2: Performance of All Models– Best to Worst
+</figcaption>
+<div aria-describedby="tbl-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">model</th>
+<th style="text-align: left;">.metric</th>
+<th style="text-align: right;">mean accuracy</th>
+<th style="text-align: right;">std_err</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ridge_advanced</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.6098032</td>
+<td style="text-align: right;">0.0014028</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log_reg_advanced</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.6091667</td>
+<td style="text-align: right;">0.0015235</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ridge_featured</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.6087269</td>
+<td style="text-align: right;">0.0012729</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">log_reg_featured</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.6085648</td>
+<td style="text-align: right;">0.0012769</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">log_reg_null</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.6078935</td>
+<td style="text-align: right;">0.0015718</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ridge_null</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.6078935</td>
+<td style="text-align: right;">0.0015718</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">boosted_null</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.6078819</td>
+<td style="text-align: right;">0.0020409</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">boosted_featured</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.6033796</td>
+<td style="text-align: right;">0.0020395</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">en_advanced</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.5996528</td>
+<td style="text-align: right;">0.0014706</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">en_featured</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.5990625</td>
+<td style="text-align: right;">0.0013625</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">boosted_advanced</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.5987269</td>
+<td style="text-align: right;">0.0017259</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">en_null</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.5969329</td>
+<td style="text-align: right;">0.0018321</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">knn_advanced</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.5624537</td>
+<td style="text-align: right;">0.0010712</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">knn_featured</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.5618981</td>
+<td style="text-align: right;">0.0008922</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">knn_null</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.5613194</td>
+<td style="text-align: right;">0.0015192</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lasso_advanced</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.4937963</td>
+<td style="text-align: right;">0.0012432</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lasso_featured</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.4937963</td>
+<td style="text-align: right;">0.0012432</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lasso_null</td>
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: right;">0.4937963</td>
+<td style="text-align: right;">0.0012432</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>In <a href="#tbl-2" class="quarto-xref">Table 2</a>, when comparing the accuracies of each of the models fitted to each of the recipes, the best performing model was the ridge model fitted to an advanced recipe. This model had an accuracy of approximately .610 with a standard error of .0014. The logistic regression model fitted to the advanced recipe was very close to this value, with an accuracy of approximately .609 and a standard error of .0015.</p>
+<section id="best-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="best-parameters">Best Parameters</h3>
+<p>In examining the tuning of models, we saw that in the best performing elastic net model (trained to the advanced recipe), the most optimal parameters were 1 and 0 for penalty and mixture respectively. This is in line with the best performing model, a ridge model in which penalty and mixture are preset to the same values. This tuning further strengthens our conclusion that ridge trained on advanced recipe is the best performing model. As for the other tuned models, the best parameter values for are as follows:</p>
+<ul>
+<li>For the best performing boosted model (<code>boosted_null</code>), best parameters include mtry = 2, min_n = 40 and learn_rate = 1.02</li>
+<li>For the best performing knn model (<code>knn_advanced</code>), best parameters include 11 neighbors. Further tuning could be explored in the future, assessing perhaps more parameters in boosted and knn models including number/depth of trees and distance parameters in each respectively. These were not included in this analysis due to computer processing limitations.</li>
+</ul>
+</section>
+<section id="recipe-variations" class="level3">
+<h3 class="anchored" data-anchor-id="recipe-variations">Recipe Variations</h3>
+<p>Generally in <a href="#tbl-2" class="quarto-xref">Table 2</a>, we see better performance of most model types (with the exceptio of boosted) on the advanced recipe. This could indicate that specifying the specific medication types, as we did in the advanced recipe, can provide a better prediction of whether a patient will return to the hospital or not.</p>
+</section>
+<section id="best-model" class="level3">
+<h3 class="anchored" data-anchor-id="best-model">Best Model</h3>
+<p>Overall, the best and final model is the advanced ridge model. This is not surprising, as most models generally performed better with an advanced recipe and, given our elastic net tuning results, a ridge approach is most optimal for predicting hospital readmittance.</p>
+</section>
+</section>
+<section id="final-model-analysis" class="level1">
+<h1>Final Model Analysis</h1>
+<div id="tbl-3" class="anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 3: Final Model Performance on Testing Set
+</figcaption>
+<div aria-describedby="tbl-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.5966667</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>In <a href="#tbl-3" class="quarto-xref">Table 3</a>, we can see the model performs with approximately 59.7% accuracy on the testing set.</p>
+<div id="tbl-4" class="anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 4: Confusion Matrix on Final Model
+</figcaption>
+<div aria-describedby="tbl-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">NO</th>
+<th style="text-align: right;">YES</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">NO</td>
+<td style="text-align: right;">2460</td>
+<td style="text-align: right;">1764</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">YES</td>
+<td style="text-align: right;">1140</td>
+<td style="text-align: right;">1836</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>In <a href="#tbl-4" class="quarto-xref">Table 4</a>, we can see that the model accurately predicts that 2460 patients will not return (true negative) and accurately predicts that 1836 patients will return (true positive). However, it predicted that 1764 patients would return that did not (false positives) and predicted 1140 patients that would not return but did (false negative).</p>
+<p>The model performs better than random chance at predicting whether diabetic patients will return to the hospital following their discharge. This model did not perform substantially better than a null model, with the best performing null model being the logistic regression with an accuracy of approximately 60.8%. The inclusion of more specific diabetes medications provides a marginal improvement in the overall accuracy of the model, making the advanced recipe ridge model the best performing.</p>
+</section>
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+<p>Overall, this process produced models that were somewhat accurate in predicting whether a diabetic patient will return to the hospital after being discharged. However, its accuracy could be improved substantially. Factors like age of diagnosis, severity of diabetes, care situation (essentially is their diabetes self-managed? is it managed for them in a facility like a nursing home? etc.), other health conditions, weight (more accurate report of weight needed, even just general assessments of patient’s BMI), and exercise frequency and intensity could be important factors in determining if a patient will return to the hospital. Future work could include these factors in determining patient risk for returning. Additionally, further research could include analyzing whether patients who returned less than 30 days after discharge have different health/demographic factors than patients who returned more than 30 days after discharge. Ultimately, assessing rehopsitalization risk is critical in ensuring proper care and appropriate planning for patients with diabetes.</p>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<p>Clore, John, Cios, Krzysztof, DeShazo, Jon, and Strack, Beata. (2014). Diabetes 130-US hospitals for years 1999-2008. UCI Machine Learning Repository.<a href="https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008">https://doi.org/10.24432/C5230J.</a>]</p>
 </section>
 
 

@@ -29,16 +29,21 @@ predicted_final <- bind_cols(diabetic_test, predict(fit_ridge_final, diabetic_te
   select(.pred_class, readmitted)
 
 # accuracy----
-accuracy_final <- accuracy(predicted_final, truth = readmitted, estimate = .pred_class)
-
-overall_accuracy <- accuracy_final |> 
+accuracy_final <- predicted_final |> 
   ungroup() |> 
-  summarise(across(starts_with(".estimate"), mean))
+  accuracy(truth = readmitted, estimate = .pred_class)
+
+accuracy_final |>
+  knitr::kable()
 
 # probabilities----
 class_probabilities <- bind_cols(diabetic_test, predict(fit_ridge_final, diabetic_test, type = "prob")) |> 
   select(.pred_YES, .pred_NO, readmitted)
 
 # confusion matrix
-confusion_matrix_final <- conf_mat(predicted_final, truth = readmitted, estimate = .pred_class)
+confusion_matrix <- predicted_final |> 
+  ungroup() |> 
+  conf_mat(truth = readmitted, estimate = .pred_class)
+
+as.data.frame.matrix(confusion_matrix$table) |> kable()
 

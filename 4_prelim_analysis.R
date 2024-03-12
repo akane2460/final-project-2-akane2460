@@ -232,6 +232,10 @@ max_accuracy |>
 best_model_order <- max_accuracy |> 
   arrange(desc(mean))
 
+best_model_order |> 
+select(wflow_id, .metric, mean, std_err) |>
+  knitr::kable()
+
   # ridge model trained on the advanced recipe best performing model
   
   
