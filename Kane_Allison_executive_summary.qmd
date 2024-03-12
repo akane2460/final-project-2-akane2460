@@ -1,0 +1,74 @@
+---
+title: "Executive Summary-- Diabetes Hospitalization: Risk for Readmission"
+subtitle: |
+  | Final Project 
+  | Data Science 2 with R (STAT 301-2)
+author: "Allison Kane"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+reference-location: margin
+citation-location: margin
+---
+
+::: {.callout-tip icon=false}
+
+## Github Repo Link
+
+[Diabetic Hospitalization Risk Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-akane2460)
+
+:::
+
+# Purpose
+In this exploration of the dataset diabetic_data.csv^[Clore, John, Cios, Krzysztof, DeShazo, Jon, and Strack, Beata. (2014). Diabetes 130-US hospitals for years 1999-2008. UCI Machine Learning Repository.[ https://doi.org/10.24432/C5230J.](https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008)], the effects of different demographic features, medications, and hospital experiences affected whether a diabetic patient would be at risk for returning to the hospital following their discharge. Patients typically return to the hospital slightly less than half the time, indicating that identifying *who* is at risk is critical. The best performing model developed in this analysis are able to predict patients at risk of returning better than random chance. This could be implemented in hospitals, assisting their discharge instructions to specific patients and their planning for future patient needs.
+
+# Key Points
+
+## Nearly Half of All Patients Discharged Return
+
+![Diabetic Patients Readmitted to Hospital](plots/readmitted_plot.png){#fig-1}
+
+| Percent_No| Percent_Yes|
+|----------:|-----------:|
+|   53.56575|    46.43425|
+  : Readmittance to Hospital {#tbl-1}
+
+   Generally, it is seen in @fig-1 and in @tbl-1 that approximately half of patients discharged will return to the hospital. Greater portions of these readmitted patients returned over 30 days after discharge but a substantial portion of them returned earlier than that. 
+   These risks are prevalent across demographic features, including gender, age, and race. Age, in particular, sees greater readmit risk as patients get older. Other factors, including test results, hospital stay features (like length of stay, number of lab procedures completed, etc.) and changes to specific diabetes medications can clarify patient risk. 
+   
+## Best Model Predicts Risk Better Than Random Chance
+|.metric  |.estimator | .estimate|
+|:--------|:----------|---------:|
+|accuracy |binary     | 0.5966667|
+  : Final Model Performance on Testing Set {#tbl-3}
+
+In @tbl-3, we can see the best model--a ridge model based on an advanced, feature-engineered recipe-- performs with approximately 59.7% accuracy on the testing set. This indicates that it is more accurate at predicting a patient's return than random chance alone. 
+
+|    |   NO|  YES|
+|:---|----:|----:|
+|NO  | 2460| 1764|
+|YES | 1140| 1836|
+  : Confusion Matrix on Final Model {#tbl-4}
+
+We see that in @tbl-4, in model application to our testing set, the model accurately predicts 1836 patients to return and 2460 not to return. It *inaccurately* predicts 1764 patients to return that did not and 1140 patients to not return that did.
+
+# Dataset Issues
+The dataset has some variables missing that might enhance model's performance if we had access to them. Weight, in particular, could be relevant to a patient's risk. However, weight's reporting in the dataset was inaccurate and unreliable. Other factors, including the severeity of diabetes, their living/care situation and any other health conditions can determine risk substantially.
+
+The dataset's design also has some flaws. The dataset only includes patients that have been in the hospital for under 2 weeks, excluding seriously ill patients that are at the *greatest* risk for returning when discharged. Additionally, understanding where patients are sent can reveal inaccurate reporting of outcomes. For example, patients that are discharged to hospice care are unlikely to return to the hospital, but they would still be recorded as "No" in their readmittance. This indicates that this model is better for assessing future needs of hospitals to prepare for patient returns, but not necessarily best for patients to understand and assess their health risks upon discharge.
+
+# Summary
+Generally, we see that diabetic patients are at high risk for returning to the hospital after discharge. Many factors contribute to patient risk for returning. Patient demographic information, especially age, plays a crucial role. Additionally, consideration of the specific medication changes patients undergo (in our advanced featured recipe) typically bolster the model's accuracy in predicting if a patient will return. Inclusion of additional health and demographic information in data collection can improve model accuracy going forward.  Further research should be conducted in the future to assess differences for risks in patients returning less than 30 days after discharge and patients returning more than 30 days after discharge. 
+
+# References
+Clore, John, Cios, Krzysztof, DeShazo, Jon, and Strack, Beata. (2014). Diabetes 130-US hospitals for years 1999-2008. UCI Machine Learning Repository.[ https://doi.org/10.24432/C5230J.](https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008)]
+
