@@ -3,7 +3,7 @@
 - `diabetic_data.csv`: This is a dataset describing the hospital experiences of over 100,000 diabetes patients from 1999 to 2008. T
 - `IDS_mapping.csv`: This contains an abridged codebook describing the meanings of the unique ID variables in the diabetic_data.csv dataset.
 
-Additionally, cleaned, folded, split, test and train data obtained from `diabetic_data.csv` are included in this folder.
+Additionally, sampled, cleaned, folded, split, test and train data obtained from `diabetic_data.csv` are included in this folder.
 
 These datasets were obtained from: 
 
