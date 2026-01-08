@@ -15,6 +15,11 @@ library(corrplot)
   # load cleaned data
   load(here("data/diabetic_clean.rda"))
 
+
+skimr::skim_without_charts(diabetic_clean)
+  
+  
+
 # univariate analysis----
 
   # categorical----
@@ -1573,4 +1578,11 @@ library(corrplot)
         # num_lab_procedures and max_glu_serum, a1cresult, insulin, metformin
         # will examine how these interactions affect model accuracy
 
+        
+        
+        
+        
+        
+        
+        
         
