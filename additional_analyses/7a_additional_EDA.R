@@ -20,8 +20,8 @@ load(here("data/diabetic_clean.rda"))
 ## Medication Validation Exploration----
 ### insulin
 
-
 ## Medication Risk Summary ----
+# medications of interest 
 meds <- c("insulin", "rosiglitazone", "pioglitazone", "glyburide", "glipizide", "glimepiride", 
           "metformin")
 
@@ -229,6 +229,115 @@ diabetic_clean |>
     y = "30-Day Readmission Rate"
   ) +
   theme_minimal()
+
+
+
+## Multiple Medication Risk Assessment----
+# medications of interest
+meds <- c("insulin", "rosiglitazone", "pioglitazone", "glyburide", "glipizide", "glimepiride", 
+          "metformin")
+
+# select for patients on multiple medications from this list
+n_meds_df <- diabetic_clean |> 
+  mutate(across(all_of(meds),
+                ~ . != "No",
+                .names = "on_{col}"))
+
+# create n_meds column
+n_meds_df <- n_meds_df |> 
+  mutate(n_meds = rowSums(across(starts_with("on_"), as.integer)))
+
+# assess risk of # of medications on
+n_meds_df |> 
+  group_by(n_meds) |>
+  summarize(
+    n = n(),
+    readmit_rate = mean(readmitted == "YES", na.rm = TRUE),
+    .groups = "drop"
+  ) |>
+  mutate(readmit_rate = round(readmit_rate, 3))
+  # being on 2 medications most at risk for readmission
+    # could indicate undercontrolled symptoms or adverse side effects
+    # of 2 medications together
+
+
+## med x med interactions ----
+# create df for patients on 2 medications (from our list)
+double_meds_df <- n_meds_df |> 
+  filter(n_meds == 2)
+
+# determine the most common medication combinations for patients to be on
+double_meds_df |> 
+  pivot_longer(
+    cols = starts_with("on_"),
+    names_to = "medication",
+    values_to = "on_med"
+  ) |> 
+  filter(on_med == TRUE) |> 
+  distinct(patient_nbr, medication) |> # ensure distinct patient number and medication (for hospital stay)
+  group_by(patient_nbr) |>   
+  summarize(
+    med_pair = paste(sort(medication), collapse = " + "),
+    .groups = "drop"
+  ) |> 
+  group_by(med_pair) |> 
+  summarize(
+    n_patients = n(),   # number of rows = number of patients
+    .groups = "drop"
+  ) |> 
+  arrange(desc(n_patients))
+
+# most patients are on 2 medications, typically insulin
+# or metformin with some other drug
+# so we're going to assess insulin and metformin interactions
+# across entire medication suite
+# most clinically used meds in general
+
+## building med x med risk grids for insulin and metformin
+double_meds_df <- double_meds_df |> 
+  mutate(
+    across(
+      all_of(meds),
+      ~ if_else(.x == "Steady", "Steady", "Changed"),
+      .names = "{.col}_status"
+    )
+  )
+
+# build med grid function
+med_risk_grid_fxn <- function (df, base_med, test_med) {
+  base_med_status <- paste0(base_med, "_status") # search for the med col
+  test_med_status <- paste0(test_med, "_status") # search for the med col
+  df |> 
+    group_by(.data[[base_med_status]], .data[[test_med_status]]) |> 
+    summarise(
+      n = n(),
+      readmit_rate = mean(readmitted == "YES", na.rm = TRUE),
+      .groups = "drop"
+    ) |> 
+    mutate(medication = test_med)
+}
+
+# insulin grids
+med_risk_grid_fxn(double_meds_df, "insulin", "pioglitazone")
+med_risk_grid_fxn(double_meds_df, "insulin", "glyburide")
+med_risk_grid_fxn(double_meds_df, "insulin", "glipizide")
+med_risk_grid_fxn(double_meds_df, "insulin", "glimepiride")
+med_risk_grid_fxn(double_meds_df, "insulin", "rosiglitazone")
+med_risk_grid_fxn(double_meds_df, "insulin", "metformin")
+# metformin grids
+med_risk_grid_fxn(double_meds_df, "metformin", "pioglitazone")
+med_risk_grid_fxn(double_meds_df, "metformin", "glyburide")
+med_risk_grid_fxn(double_meds_df, "metformin", "glipizide")
+med_risk_grid_fxn(double_meds_df, "metformin", "glimepiride")
+med_risk_grid_fxn(double_meds_df, "metformin", "rosiglitazone")
+  
+  # overall:
+    # insulin x med red flags:
+        #insulin x glyburide: both changed incr risk
+        #insulin x glimepiride: both steady incr risk (changed also high)
+        #insulin x metformin: both change BIG incr risk
+    # metformin x med red flags:
+        #metformin x glyburide: both changed incr risk ()
 
 
 ## OVERALL----
