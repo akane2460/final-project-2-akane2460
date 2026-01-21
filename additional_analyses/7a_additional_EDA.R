@@ -11,7 +11,6 @@ load(here("data/diabetic_clean.rda"))
 # load cleaned data
 load(here("data/diabetic_clean.rda"))
 
-
 # Medication Risk Index---
   # based on previous models, medication regimen data improves risk assessment
   # here, identify the medications and the associated regimen changes that 
@@ -318,18 +317,18 @@ med_risk_grid_fxn <- function (df, base_med, test_med) {
 }
 
 # insulin grids
-med_risk_grid_fxn(double_meds_df, "insulin", "pioglitazone")
-med_risk_grid_fxn(double_meds_df, "insulin", "glyburide")
-med_risk_grid_fxn(double_meds_df, "insulin", "glipizide")
-med_risk_grid_fxn(double_meds_df, "insulin", "glimepiride")
-med_risk_grid_fxn(double_meds_df, "insulin", "rosiglitazone")
-med_risk_grid_fxn(double_meds_df, "insulin", "metformin")
+insulin_pioglitazone <- med_risk_grid_fxn(double_meds_df, "insulin", "pioglitazone")
+insulin_glyburide <- med_risk_grid_fxn(double_meds_df, "insulin", "glyburide")
+insulin_glipizide <- med_risk_grid_fxn(double_meds_df, "insulin", "glipizide")
+insulin_glimepiride <- med_risk_grid_fxn(double_meds_df, "insulin", "glimepiride")
+insulin_rosiglitazone <- med_risk_grid_fxn(double_meds_df, "insulin", "rosiglitazone")
+insulin_metformin <- med_risk_grid_fxn(double_meds_df, "insulin", "metformin")
 # metformin grids
-med_risk_grid_fxn(double_meds_df, "metformin", "pioglitazone")
-med_risk_grid_fxn(double_meds_df, "metformin", "glyburide")
-med_risk_grid_fxn(double_meds_df, "metformin", "glipizide")
-med_risk_grid_fxn(double_meds_df, "metformin", "glimepiride")
-med_risk_grid_fxn(double_meds_df, "metformin", "rosiglitazone")
+metformin_pioglitazone <- med_risk_grid_fxn(double_meds_df, "metformin", "pioglitazone")
+metformin_glyburide <- med_risk_grid_fxn(double_meds_df, "metformin", "glyburide")
+metformin_glipizide <- med_risk_grid_fxn(double_meds_df, "metformin", "glipizide")
+metformin_glimepiride <- med_risk_grid_fxn(double_meds_df, "metformin", "glimepiride")
+metformin_rosiglitazone <- med_risk_grid_fxn(double_meds_df, "metformin", "rosiglitazone")
   
   # overall:
     # insulin x med red flags:
@@ -338,6 +337,199 @@ med_risk_grid_fxn(double_meds_df, "metformin", "rosiglitazone")
         #insulin x metformin: both change BIG incr risk
     # metformin x med red flags:
         #metformin x glyburide: both changed incr risk ()
+
+# Building a Medication Instability Index----
+
+# MII
+
+## single meds----
+# building risk assessment function
+single_med_risk_assessment_fxn <- function (med, condition, df) {
+  df |> 
+    filter(medication == med) |> 
+    mutate(
+      single_risk = ifelse(condition == 'Steady', 
+                           (Steady - ((Up + Down)/2))/Steady, 
+                           (((Up + Down)/2) - Steady)/((Up + Down)/2)) ) |> 
+    pull(single_risk)
+  
+}
+
+# prepare data for input into risk assessment function
+medication_1 <- c("rosiglitazone", "insulin", "insulin",
+                 "pioglitazone", "pioglitazone", "glipizide", 
+                 "glipizide")
+regimen_1 <- c("Steady", "Up", "Down", "Up", "Down", 
+                     "Up", "Down")
+
+single_med_red_flags <- data.frame(medication_1, regimen_1)
+
+med_readmit_wide <- as.data.frame(med_readmit_wide)
+
+# apply single med risk assessment function
+single_med_red_flags <- single_med_red_flags  |> 
+  rowwise() |> 
+  mutate(
+    singlerisk = single_med_risk_assessment_fxn(medication_1, regimen_1, med_readmit_wide)
+  ) |> ungroup()
+
+# double meds----
+    #insulin x glyburide: both changed incr risk
+    #insulin x glimepiride: both steady incr risk (changed also high)
+    #insulin x metformin: both change BIG incr risk
+    # metformin x med red flags:
+    #metformin x glyburide: both changed incr risk ()
+
+medication_1 <- c("insulin", "insulin", "insulin", "metformin")
+medication_2 <- c("glyburide", "glimepiride", "metformin", "glyburide")
+regimen_1 <- c("Changed", "Steady", "Changed", "Changed")
+regimen_2 <- c("Changed", "Steady", "Changed", "Changed")
+
+
+interaction_matrices <- list(
+  insulin_glyburide    = insulin_glyburide,
+  insulin_glimepiride  = insulin_glimepiride,
+  insulin_metformin   = insulin_metformin,
+  metformin_glyburide = metformin_glyburide
+)
+
+double_med_red_flags <- data.frame(medication_1, medication_2, regimen_1, regimen_2)
+
+double_med_risk_fxn <- function(med1, med2, regimen1, regimen2, interaction_list) {
+  
+  key <- paste(med1, med2, sep = "_")
+  
+  if (!key %in% names(interaction_list)) {
+    stop(paste("No interaction matrix found for", key))
+  }
+  
+  df <- interaction_list[[key]]
+  
+  med1_status <- paste0(med1, "_status")
+  med2_status <- paste0(med2, "_status")
+  
+  # safer comparison (opposite extreme)
+  safer1 <- ifelse(regimen1 == "Changed", "Steady", "Changed")
+  safer2 <- ifelse(regimen2 == "Changed", "Steady", "Changed")
+  
+  risky_rate <- df |>
+    filter(
+      .data[[med1_status]] == regimen1,
+      .data[[med2_status]] == regimen2
+    ) |>
+    pull(readmit_rate)
+  
+  safer_rate <- df |>
+    filter(
+      .data[[med1_status]] == safer1,
+      .data[[med2_status]] == safer2
+    ) |>
+    pull(readmit_rate)
+  
+   double_risk <- (risky_rate - safer_rate) / safer_rate
+}
+
+
+double_med_red_flags <- double_med_red_flags |>
+  mutate(
+    double_risk = pmap_dbl(
+      list(medication_1, medication_2, regimen_1, regimen_2),
+      double_med_risk_fxn,
+      interaction_list = interaction_matrices
+    )
+  )
+
+
+## building total_risk----
+single_meds <- unique(single_med_red_flags$medication_1)
+
+patient_single_med_long <- diabetic_clean |>
+  select(encounter_id, readmitted, all_of(single_meds)) |>
+  pivot_longer(
+    cols = all_of(single_meds),
+    names_to = "medication_1",
+    values_to = "regimen_1"
+  )
+
+patient_single_med_scored <- patient_single_med_long |>
+  left_join(
+    single_med_red_flags,
+    by = c("medication_1", "regimen_1")
+  ) |>
+  mutate(
+    singlerisk = replace_na(singlerisk, 0)
+  )
+
+patient_single_med_scored <- patient_single_med_scored |>
+  group_by(encounter_id) |>
+  summarise(
+    single_med_risk_score = sum(singlerisk),
+    .groups = "drop"
+  )
+  
+diabetic_clean <- diabetic_clean |>
+  left_join(patient_single_med_scored, by = "encounter_id") 
+
+### double meds risk implementation
+# create med1 x med2 pairings
+
+flagged_meds <- unique(c(
+  double_med_red_flags$medication_1,
+  double_med_red_flags$medication_2
+))
+
+
+ 
+
+
+patient_double_long <- diabetic_clean |>
+  pivot_longer(
+    cols = all_of(unique(c(double_med_red_flags$medication_1, double_med_red_flags$medication_2))),
+    names_to = "medication",
+    values_to = "regimen"
+  ) |>
+  filter(regimen != "No") |>   # drop meds the patient isn’t on
+  mutate(risk_regimen = ifelse(regimen %in% c("Up", "Down"), "Changed", regimen))
+
+
+patient_double_risk <- diabetic_clean |>
+  select(encounter_id) |>
+  mutate(double_risk = 0)
+
+for(i in seq_len(nrow(double_med_red_flags))) {
+  
+  med1 <- double_med_red_flags$medication_1[i]
+  med2 <- double_med_red_flags$medication_2[i]
+  reg1 <- double_med_red_flags$regimen_1[i]
+  reg2 <- double_med_red_flags$regimen_2[i]
+  risk <- double_med_red_flags$double_risk[i]
+  
+  # find patients who match this pair & regimen
+  patients_with_risk <- patient_double_long |>
+    filter(medication == med1 & risk_regimen == reg1) |>
+    inner_join(
+      patient_double_long |> filter(medication == med2 & risk_regimen == reg2),
+      by = "encounter_id"
+    ) |>
+    pull(encounter_id)
+  
+  # add risk
+  patient_double_risk <- patient_double_risk |>
+    mutate(double_risk = ifelse(encounter_id %in% patients_with_risk,
+                                double_risk + risk,
+                                double_risk))
+}
+
+patient_double_risk_agg <- patient_double_risk |>
+  group_by(encounter_id) |>
+  summarise(double_risk = sum(double_risk, na.rm = TRUE), .groups = "drop")
+
+diabetic_clean <- diabetic_clean |>
+  left_join(patient_double_risk_agg, by = "encounter_id")
+
+## create total risk index----
+diabetic_clean <- diabetic_clean |> 
+  mutate(total_risk = double_risk + single_med_risk_score)
 
 
 ## OVERALL----
