@@ -6,8 +6,6 @@ library(here)
 library(knitr)
 library(corrplot)
 
-# load training data 
-load(here("data/diabetic_clean.rda"))
 # load cleaned data
 load(here("data/diabetic_clean.rda"))
 
@@ -426,13 +424,13 @@ double_med_risk_fxn <- function(med1, med2, regimen1, regimen2, interaction_list
     ) |>
     pull(readmit_rate)
   
-   double_risk <- (risky_rate - safer_rate) / safer_rate
+   double_med_risk_score <- (risky_rate - safer_rate) / safer_rate
 }
 
 
 double_med_red_flags <- double_med_red_flags |>
   mutate(
-    double_risk = pmap_dbl(
+    double_med_risk_score = pmap_dbl(
       list(medication_1, medication_2, regimen_1, regimen_2),
       double_med_risk_fxn,
       interaction_list = interaction_matrices
@@ -440,7 +438,7 @@ double_med_red_flags <- double_med_red_flags |>
   )
 
 
-## building total_risk----
+## building single and double risk----
 single_meds <- unique(single_med_red_flags$medication_1)
 
 patient_single_med_long <- diabetic_clean |>
@@ -494,7 +492,7 @@ patient_double_long <- diabetic_clean |>
 
 patient_double_risk <- diabetic_clean |>
   select(encounter_id) |>
-  mutate(double_risk = 0)
+  mutate(double_med_risk_score = 0)
 
 for(i in seq_len(nrow(double_med_red_flags))) {
   
@@ -502,7 +500,7 @@ for(i in seq_len(nrow(double_med_red_flags))) {
   med2 <- double_med_red_flags$medication_2[i]
   reg1 <- double_med_red_flags$regimen_1[i]
   reg2 <- double_med_red_flags$regimen_2[i]
-  risk <- double_med_red_flags$double_risk[i]
+  risk <- double_med_red_flags$double_med_risk_score[i]
   
   # find patients who match this pair & regimen
   patients_with_risk <- patient_double_long |>
@@ -515,22 +513,24 @@ for(i in seq_len(nrow(double_med_red_flags))) {
   
   # add risk
   patient_double_risk <- patient_double_risk |>
-    mutate(double_risk = ifelse(encounter_id %in% patients_with_risk,
-                                double_risk + risk,
-                                double_risk))
+    mutate(double_med_risk_score = ifelse(encounter_id %in% patients_with_risk,
+                                double_med_risk_score + risk,
+                                double_med_risk_score))
 }
 
 patient_double_risk_agg <- patient_double_risk |>
   group_by(encounter_id) |>
-  summarise(double_risk = sum(double_risk, na.rm = TRUE), .groups = "drop")
+  summarise(double_med_risk_score = sum(double_med_risk_score, na.rm = TRUE), .groups = "drop")
 
 diabetic_clean <- diabetic_clean |>
   left_join(patient_double_risk_agg, by = "encounter_id")
 
 ## create total risk index----
-diabetic_clean <- diabetic_clean |> 
-  mutate(total_risk = double_risk + single_med_risk_score)
+diabetic_mii <- 
+  diabetic_clean |> mutate(medication_instability_index = double_med_risk_score + single_med_risk_score)
 
+## save data with risk index included
+save(diabetic_mii, file = here("data/diabetic_mii.rda"))
 
 ## OVERALL----
 # change regimen red flags
