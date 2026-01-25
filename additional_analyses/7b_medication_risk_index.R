@@ -14,51 +14,6 @@ load(here("data/diabetic_clean.rda"))
   # here, identify the medications and the associated regimen changes that 
   # signal greatest risk for readmission
 
-general_readmit_rates <- diabetic_clean |>
-  group_by(readmitted) |> 
-  summarize(
-    n = n(),
-    readmit_rate = n()/96921,
-    .groups = "drop"
-  )
-
-# cols <- c("4" = "#242806", "6" = "#F7FADB", "8" = "#143D6C")
-
-# '4CB07E', '4CB0B0', 'B04CB0'
-
-cols <- c("Not Readmitted" = "#4CB04C", "Readmitted" = "#B04C4C")
-
-
-readmit_rates_plot <- general_readmit_rates |>
-  mutate(readmitted = recode(readmitted,
-                             NO = "Not Readmitted",
-                             YES = "Readmitted")) |> 
-  ggplot(aes(x = readmitted, y = readmit_rate, fill = readmitted)) +
-  geom_col() +
-  geom_text(
-            aes(
-            x = readmitted,
-            y = readmit_rate,
-            label = scales::percent(readmit_rate, accuracy = 0.1)),
-    vjust = -0.5,
-    size = 4
-  ) +
-  scale_y_continuous(labels = scales::percent) +
-  scale_fill_manual(values = cols) +
-  labs(
-    title = "30-Day Hospital Readmission Rates",
-    x = "Readmission Status",
-    y = "30-Day Readmission Rate",
-  ) +
-  guides(fill = "none") +
-  theme_minimal()
-
-ggsave("additional_analyses/plots/readmit_rates_plot.png", plot = readmit_rates_plot)
-
-
-
-
-
 ## Medication Validation Exploration----
 ### insulin
 
