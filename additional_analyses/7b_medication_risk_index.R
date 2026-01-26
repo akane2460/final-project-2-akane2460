@@ -9,7 +9,7 @@ library(corrplot)
 # load cleaned data
 load(here("data/diabetic_clean.rda"))
 
-# Medication Risk Index---
+# Medication Risk Index----
   # based on previous models, medication regimen data improves risk assessment
   # here, identify the medications and the associated regimen changes that 
   # signal greatest risk for readmission
@@ -42,7 +42,8 @@ med_readmit_wide <- med_readmit_summary |>
   pivot_wider(
     names_from = status,
     values_from = readmit_rate
-  )
+  ) |> 
+  select(- No)
 
 med_readmit_wide |> knitr::kable()
 
@@ -67,53 +68,64 @@ med_readmit_wide |> knitr::kable()
     
 ## Medication Risk Plots ----
 
-### glimepiride
-diabetic_clean |>
-  group_by(glimepiride) |>
-  summarize(
-    readmit_rate = mean(readmitted == "YES", na.rm = TRUE),
-    n = n(),
-    .groups = "drop"
-  ) |>
-  ggplot(aes(x = glimepiride, y = readmit_rate)) +
-  geom_col(fill = "steelblue") +
-  geom_text(
-    aes(label = scales::percent(readmit_rate, accuracy = 0.1)),
-    vjust = -0.5,
-    size = 4
-  ) +
-  scale_y_continuous(labels = scales::percent) +
-  labs(
-    title = "30-Day Hospital Readmission Rate by Inpatient Glimepiride Prescribing and Dose Changes",
-    x = "Glimepiride Status",
-    y = "30-Day Readmission Rate"
-  ) +
-  theme_minimal()
+cols <- c("Down" = "#8DCE8D", "Steady" = "#4CB04C", "Up" = "#317231")
 
-### glipizide
-diabetic_clean |>
+
+### glimepiride----
+# diabetic_clean |>
+#   group_by(glimepiride) |>
+#   summarize(
+#     readmit_rate = mean(readmitted == "YES", na.rm = TRUE),
+#     n = n(),
+#     .groups = "drop"
+#   ) |>
+#   filter(glimepiride != 'No') |> 
+#   ggplot(aes(x = glimepiride, y = readmit_rate, fill = glimepiride)) +
+#   geom_col() +
+#   geom_text(
+#     aes(label = scales::percent(readmit_rate, accuracy = 0.1)),
+#     vjust = -0.5,
+#     size = 4
+#   ) +
+#   scale_fill_manual(values = cols, guide = "none") + 
+#   scale_y_continuous(labels = scales::percent) +
+#   labs(
+#     title = "30-Day Readmission Rate by Inpatient Glimepiride Regimen Changes",
+#     x = "Glimepiride Status",
+#     y = "30-Day Readmission Rate"
+#   ) +
+#   theme_minimal()
+
+### glipizide----
+glipizide_readmit_plot <- diabetic_clean |>
   group_by(glipizide) |>
   summarize(
     readmit_rate = mean(readmitted == "YES", na.rm = TRUE),
     n = n(),
     .groups = "drop"
   ) |>
-  ggplot(aes(x = glipizide, readmit_rate, y = readmit_rate)) +
-  geom_col(fill = "steelblue") +
+  filter(glipizide != 'No') |> 
+  ggplot(aes(x = glipizide, y = readmit_rate, fill = glipizide)) +
+  geom_col() +
+  geom_col() +
   geom_text(
     aes(label = scales::percent(readmit_rate, accuracy = 0.1)),
     vjust = -0.5,
     size = 4
   ) +
+  scale_fill_manual(values = cols, guide = "none") + 
   scale_y_continuous(labels = scales::percent) +
   labs(
-    title = "30-Day Hospital Readmission Rate by Inpatient Glipizide Prescribing and Dose Changes",
+    title = "30-Day Readmission Rate by Inpatient Glipizide Regimen Changes",
     x = "Glipizide Status",
     y = "30-Day Readmission Rate"
   ) +
   theme_minimal()
 
-### glyburide
+ggsave("additional_analyses/plots/glipizide_readmit_plot.png", plot = glipizide_readmit_plot, width = 6.5, height = 8)
+
+
+### glyburide----
 diabetic_clean |>
   group_by(glyburide) |>
   summarize(
@@ -136,29 +148,39 @@ diabetic_clean |>
   ) +
   theme_minimal()
 
-### insulin
-diabetic_clean |>
+
+
+
+
+### insulin----
+insulin_readmit_plot <- diabetic_clean |>
   group_by(insulin) |>
   summarize(
     readmit_rate = mean(readmitted == "YES", na.rm = TRUE),
     n = n(),
     .groups = "drop"
   ) |>
-  ggplot(aes(x = insulin, readmit_rate, y = readmit_rate)) +
-  geom_col(fill = "steelblue") +
+  filter(insulin != 'No') |> 
+  ggplot(aes(x = insulin, readmit_rate, y = readmit_rate, fill = insulin)) +
+  geom_col() +
   geom_text(
     aes(label = scales::percent(readmit_rate, accuracy = 0.1)),
     vjust = -0.5,
     size = 4
   ) +
   scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = cols, guide = "none") + 
   labs(
-    title = "30-Day Hospital Readmission Rate by Inpatient Insulin Prescribing and Dose Changes",
+    title = "30-Day Readmission Rate by Inpatient Insulin Regimen Changes",
     x = "Insulin Status",
     y = "30-Day Readmission Rate"
   ) +
   theme_minimal()
-### metformin
+
+ggsave("additional_analyses/plots/insulin_readmit_plot.png", plot = insulin_readmit_plot, width = 6.5, height = 8)
+
+
+### metformin----
 diabetic_clean |>
   group_by(metformin) |>
   summarize(
@@ -166,68 +188,82 @@ diabetic_clean |>
     n = n(),
     .groups = "drop"
   ) |>
-  ggplot(aes(x = metformin, readmit_rate, y = readmit_rate)) +
-  geom_col(fill = "steelblue") +
+  filter(metformin != 'No') |> 
+  ggplot(aes(x = metformin, readmit_rate, y = readmit_rate, fill = metformin)) +
+  geom_col() +
   geom_text(
     aes(label = scales::percent(readmit_rate, accuracy = 0.1)),
     vjust = -0.5,
     size = 4
   ) +
   scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = cols, guide = "none") + 
   labs(
-    title = "30-Day Hospital Readmission Rate by Inpatient Metformin Prescribing and Dose Changes",
+    title = "30-Day Readmission Rate by Inpatient Metformin Regimen Changes",
     x = "Metformin Status",
     y = "30-Day Readmission Rate"
   ) +
   theme_minimal()
 
-### pioglitazone
-diabetic_clean |>
+
+
+
+
+
+### pioglitazone----
+pioglitazone_readmit_plot <- diabetic_clean |>
   group_by(pioglitazone) |>
   summarize(
     readmit_rate = mean(readmitted == "YES", na.rm = TRUE),
     n = n(),
     .groups = "drop"
   ) |>
-  ggplot(aes(x = pioglitazone, readmit_rate, y = readmit_rate)) +
-  geom_col(fill = "steelblue") +
+  filter(pioglitazone != 'No') |> 
+  ggplot(aes(x = pioglitazone, y = readmit_rate, fill = pioglitazone)) +
+  geom_col() +
   geom_text(
     aes(label = scales::percent(readmit_rate, accuracy = 0.1)),
     vjust = -0.5,
     size = 4
   ) +
   scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = cols, guide = "none") + 
   labs(
-    title = "30-Day Hospital Readmission Rate by Inpatient Pioglitazone Prescribing and Dose Changes",
+    title = "30-Day Readmission Rate by Inpatient Pioglitazone Regimen Changes",
     x = "Pioglitazone Status",
     y = "30-Day Readmission Rate"
   ) +
   theme_minimal()
 
-### rosiglitazone
-diabetic_clean |>
+ggsave("additional_analyses/plots/pioglitazone_readmit_plot.png", plot = pioglitazone_readmit_plot, width = 6.5, height = 8)
+
+
+### rosiglitazone---- 
+rosiglitazone_readmit_plot <- diabetic_clean |>
   group_by(rosiglitazone) |>
   summarize(
     readmit_rate = mean(readmitted == "YES", na.rm = TRUE),
     n = n(),
     .groups = "drop"
   ) |>
-  ggplot(aes(x = rosiglitazone, readmit_rate, y = readmit_rate)) +
-  geom_col(fill = "steelblue") +
+  filter(rosiglitazone != 'No') |> 
+  ggplot(aes(x = rosiglitazone, y = readmit_rate, fill = rosiglitazone)) +
+  geom_col() +
   geom_text(
     aes(label = scales::percent(readmit_rate, accuracy = 0.1)),
     vjust = -0.5,
     size = 4
   ) +
   scale_y_continuous(labels = scales::percent) +
+  scale_fill_manual(values = cols, guide = "none") + 
   labs(
-    title = "30-Day Hospital Readmission Rate by Inpatient Rosiglitazone Prescribing and Dose Changes",
+    title = "30-Day Readmission Rate by Inpatient Rosiglitazone Regimen Changes",
     x = "Rosiglitazone Status",
     y = "30-Day Readmission Rate"
   ) +
   theme_minimal()
 
-
+ggsave("additional_analyses/plots/rosiglitazone_readmit_plot.png", plot = rosiglitazone_readmit_plot, width = 6.5, height = 8)
 
 ## Multiple Medication Risk Assessment----
 # medications of interest
