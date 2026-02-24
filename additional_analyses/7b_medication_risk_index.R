@@ -564,7 +564,7 @@ glyburide_x_metformin_readmit_plot <- metformin_glyburide |>
   scale_fill_manual(values = cols, guide = "none") +
   scale_y_continuous(labels = scales::percent) +
   labs(
-    title = "Readmission Rate by Metformin x Insulin Regimen Stability",
+    title = "Readmission Rate by Metformin x Glyburide Regimen Stability",
     x = "Regimens",
     y = "30-Day Readmission Rate"
   ) +
