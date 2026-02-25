@@ -66,7 +66,7 @@ med_readmit_wide |> knitr::kable()
     # glipizide
 
     
-## Medication Risk Plots ----
+## Single Medication Risk Plots ----
 
 cols <- c("Down" = "#8DCE8D", "Steady" = "#4CB04C", "Up" = "#317231")
 
